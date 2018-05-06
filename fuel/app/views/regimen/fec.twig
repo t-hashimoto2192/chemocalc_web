@@ -1,0 +1,262 @@
+{# ベースとなるテンプレートを継承 #}
+{% extends "base.twig" %}
+{#
+    【FEC療法】 
+#}
+{#療法名#}
+{% block regimenName %}FEC療法{% endblock regimenName %}
+
+{#使用薬剤・薬価表示#}
+{% block regimenContent %}
+    <div class="row">
+        <div class="col-md-12">
+            <table class="dosage">
+                <tr>
+                    <td class="col1">
+                        {{html_anchor("JavaScript:void(0);", "5-FU(" ~ recipe_5fu.dosage ~ "mg/㎡)：", {'class' : 'lnkBtn'}) }}                    
+                    </td>
+                    <td class="col2">
+                        <span data-bind="text: fec_fu_ref"></span>                   
+                    </td>
+                    <td class="col3">
+                        mg/body                   
+                    </td>
+                    <td class="col4">
+                        <input type="text" class="form-control" size="8"  data-bind="value: fec_fu_val"/>    
+                    </td>
+                    <td class="col5">
+                        mg/body                   
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        {{html_anchor("JavaScript:void(0);", "CPA(500mg/㎡)：", {'class' : 'lnkBtn'}) }}                    
+                    </td>
+                    <td class="col2">
+                        <span>0</span>                    
+                    </td>
+                    <td class="col3">
+                        mg/body                   
+                    </td>
+                    <td class="col4">
+                        <input type="text" class="form-control" size="8"  data-bind="value: fec_fu_val"/>    
+                    </td>
+                    <td class="col5">
+                        mg/body                   
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        {{html_anchor("JavaScript:void(0);", "EPI(100mg/㎡)：", {'class' : 'lnkBtn'}) }}                    
+                    </td>
+                    <td class="col2">
+                        <span>0</span>                    
+                    </td>
+                    <td class="col3">
+                        mg/body                   
+                    </td>
+                    <td class="col4">
+                        <input type="text" class="form-control" size="8"  data-bind="value: fec_fu_val"/>    
+                    </td>
+                    <td class="col5">
+                        mg/body                   
+                    </td>
+                </tr>
+            </table>
+        </div>    
+    </div> 
+    <div class="row">
+        <span style="font-weight: bold;font-size: large;">制吐剤</span> 
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="fiveht3">
+                <tr>
+                    <td class="col1" style="border-bottom: 1px #909090 solid;margin-bottom: 10px;">
+                        {{html_anchor("JavaScript:void(0);", "アロキシ制注０．７５mg", {'class' : 'lnkBtn'}) }}                    
+                    </td>
+                    <td class="col2">
+                        {{html_anchor("JavaScript:void(0);", "1[本]", {'class' : 'lnkBtn'}) }}                    
+                    </td>
+                </tr>
+                {#TODO:以下は薬剤が無い場合表示しない#}
+                <tr>
+                    <td class="col1">
+                        <span>アプレピタント８０ｍｇ</span>                    
+                    </td>
+                    <td class="col2">
+                        {{html_anchor("JavaScript:void(0);", "2[カプセル]", {'class' : 'lnkBtn'}) }}                   
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        <span>アプレピタント１２５ｍｇ</span>       
+                    </td>
+                    <td class="col2">
+                        {{html_anchor("JavaScript:void(0);", "2[カプセル]", {'class' : 'lnkBtn'}) }}                         
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        <span>ホスアプレピタント点滴静注</span>       
+                    </td>
+                    <td class="col2">
+                        {{html_anchor("JavaScript:void(0);", "0[本]", {'class' : 'lnkBtn'}) }}                         
+                    </td>
+                </tr>
+            </table>
+        </div> 
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="price">
+                <tr>
+                    <td class="col1">
+                        5-FU薬価：                    
+                    </td>
+                    <td class="col2">
+                        <span></span>                  
+                    </td>
+                    <td class="col3">
+                        円                   
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        CPA薬価：                    
+                    </td>
+                    <td class="col2">
+                        <span></span>                  
+                    </td>
+                    <td class="col3">
+                        円                   
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        EPI薬価：                    
+                    </td>
+                    <td class="col2">
+                        <span></span>                  
+                    </td>
+                    <td class="col3">
+                        円                   
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        合計薬価：                    
+                    </td>
+                    <td class="col2">
+                        <span></span>                  
+                    </td>
+                    <td class="col3">
+                        円                   
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        3割負担：                    
+                    </td>
+                    <td class="col2">
+                        <span></span>                  
+                    </td>
+                    <td class="col3">
+                        円                   
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        2割負担：                    
+                    </td>
+                    <td class="col2">
+                        <span></span>                  
+                    </td>
+                    <td class="col3">
+                        円                   
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        1割負担：                    
+                    </td>
+                    <td class="col2">
+                        <span></span>                  
+                    </td>
+                    <td class="col3">
+                        円                   
+                    </td>
+                </tr>
+            </table>
+        </div> 
+    </div>                       
+{% endblock regimenContent %}
+
+{#薬剤の規格#}
+{% block regimenMedina %}
+    <div class="row" style="padding-bottom: 10px;">
+        <span style="font-weight: bold;font-size: medium;">5-FU：</span>
+    </div> 
+    <div class="row">
+        <table class="table table-bordered table-condensed table-hover table-striped tblMedinaList">
+            <tr>
+                <td>
+                    １，０００ｍｇ１瓶
+                </td>
+            </tr>
+            <tr>
+                <td class="active">　</td>
+            </tr>
+            <tr>
+                <td>　</td>
+            </tr>
+            <tr>
+                <td class="active">　</td>
+            </tr>
+        </table>
+    </div> 
+    <div class="row" style="padding-bottom: 10px;">
+        <span style="font-weight: bold;font-size: medium;">CPA：</span>
+    </div>  
+    <div class="row">
+        <table class="table table-bordered table-condensed table-hover table-striped tblMedinaList">
+            <tr>
+                <td>
+                    １００ｍｇ１瓶
+                </td>
+            </tr>
+            <tr>
+                <td class="active">５００ｍｇ１瓶</td>
+            </tr>
+            <tr>
+                <td>　</td>
+            </tr>
+            <tr>
+                <td class="active">　</td>
+            </tr>
+        </table>
+    </div> 
+    <div class="row" style="padding-bottom: 10px;">
+        <span style="font-weight: bold;font-size: medium;">EPI：</span>
+    </div>  
+    <div class="row">
+        <table class="table table-bordered table-condensed table-hover table-striped tblMedinaList">
+            <tr>
+                <td>
+                    １０ｍｇ５ｍL１瓶
+                </td>
+            </tr>
+            <tr>
+                <td class="active">
+                    ５０ｍｇ２５ｍL１瓶
+                </td>
+            </tr>
+            <tr>
+                <td>　</td>
+            </tr>
+            <tr>
+                <td class="active">　</td>
+            </tr>
+        </table>
+    </div> 
+{% endblock regimenMedina %}

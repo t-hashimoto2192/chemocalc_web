@@ -1,0 +1,61 @@
+{#
+    【療法コンテンツのベース】 
+        ・療法毎のページの継承元とする
+#}
+<div class="row">
+    <div class="col-md-12">
+        <div id="noBsaAlert" class="alert alert-danger" role="alert" data-bind="visible: !bsa()">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            参考投与量を計算するため、身長と体重を入力してください。
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+
+            <div style="text-align: center;font-weight: bold;">
+                <span style="font-size: large">治療費計算シート </span>
+                <span style="font-size: xx-large"> - {% block regimenName %}{#療法名：継承先で定義#}{% endblock regimenName %} -</span> 
+            </div>
+        </div>
+        <div class="row">
+            <div style="text-align: center;font-weight: bold;">
+                <span style="font-size: medium">※この価格は概算です。</span>
+            </div>
+        </div>
+    </div>  
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-8">
+            <div class="row">
+                <div style="font-weight: bold;">
+                    <span style="font-size: large">抗がん剤(Full Dose;DuBois式)</span>
+                </div>
+            </div>
+        {% block regimenContent %}{#使用薬剤・薬価表示：継承先で定義#}{% endblock regimenContent %}
+    </div>
+    <div class="col-md-4">
+        <div class="row" style="padding-bottom: 20px;">
+            <span style="font-weight: bold;font-size: large">薬剤の規格</span>
+        </div>   
+    {% block regimenMedina %}{#薬剤の規格：継承先で定義#}{% endblock regimenMedina %}
+</div>
+</div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div style="text-align: center;font-weight: bold;">
+            <span>(投与日毎の価格を表示しております。1コースの価格は比較を参照してください。)</span>
+        </div>
+    </div>
+</div>   
+
+
+
+
+
+
+
+

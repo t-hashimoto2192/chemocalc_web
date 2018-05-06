@@ -1,0 +1,153 @@
+{#
+    【メインページ】 
+        ・療法毎のコンテンツをすべて読み込んでおきSPA的に
+            メニューで表示・非表示を切り替える
+#}
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>{{title}}</title>
+    {{asset_css('bootstrap.css') }}
+    {{asset_css('custom/custom_navbar.css') }}
+    {{asset_css('custom/bootstrap-print.css') }}
+    {{asset_css('custom/chemocalc.css') }}
+    {{asset_css('custom/regimen.css') }}
+    {{asset_js('https://code.jquery.com/jquery-3.0.0.min.js' | raw) }}
+    {{asset_js('https://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min.js' | raw) }}    
+    {{asset_js('bootstrap.js') }}
+    {{asset_js('custom/chemocalc.js') }}    
+    <link rel="shortcut icon" href="{{base_url(false) }}/assets/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="{{base_url(false) }}/assets/img/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <input type="hidden" id='nowRegimen' />
+    <div class="wrapper">
+        <div class="header">
+            <!-- 固定ヘッダー -->
+            <nav class="navbar navbar-inverse navbar-default navbar-fixed-top">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" rel="home" href="#" title="Chemocalc Web">
+                            {{asset_img('ChemoCalcTitle.png', {'style' : 'max-width:150px; margin-top: -7px;'})}}
+                        </a>
+                    </div> 
+                    <form class="navbar-form navbar-left" id="bsaCalcForm">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">身長</span>
+                                <input type="text" class="form-control" size="3"  data-bind='value: stature, valueUpdate: "afterkeydown"'/>
+                                <span class="input-group-addon">cm</span>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon">体重</span>
+                                <input type="text" class="form-control" size="3"  data-bind='value: weight, valueUpdate: "afterkeydown"'/>
+                                <span class="input-group-addon">kg</span>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon">体表面積</span>
+                                <input type="text" id="txtBsa" class="form-control" size="5" disabled="true" data-bind="value: bsa">
+                                <span class="input-group-addon">㎡ (DuBois式)</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </nav>
+        </div>
+        <div class="content">
+            <div style="height:1000px;">
+                <!-- 固定サイドメニュー -->
+                <nav class="navbar-side">
+                    <ul class="navbar-side-menu">
+                        <li>
+                            {{html_anchor("JavaScript:void(0);", "FEC", {'id' : 'btn_fec', 'class' : 'nav-label eve', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "EC", {'class' : 'nav-label odd', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "AC", {'class' : 'nav-label eve', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "DOC", {'class' : 'nav-label odd', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "Her+DOC", {'class' : 'nav-label eve', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "TC", {'class' : 'nav-label odd', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "PTX", {'class' : 'nav-label eve', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "PTX+BV", {'class' : 'nav-label odd', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "w Her+PTX", {'class' : 'nav-label eve', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "HAL", {'class' : 'nav-label odd', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "Per+Her+DOC", {'class' : 'nav-label eve', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "Per+Her+HAL", {'class' : 'nav-label odd', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "nabPTX", {'class' : 'nav-label eve', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "VNR", {'class' : 'nav-label odd', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "T-DM1", {'class' : 'nav-label eve', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "Her+VNR", {'class' : 'nav-label odd', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "GEM", {'class' : 'nav-label eve', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "Her+TC", {'class' : 'nav-label odd', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "Lapa+Cape", {'class' : 'nav-label eve', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "経口5FU", {'class' : 'nav-label odd', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "ホルモン療法", {'id' : 'btn_holmon', 'class' : 'nav-label eve', 'data-bind' : 'click: clickMenu'}) }}
+                        </li>
+                        <li>
+                            <h4>
+                                <span class="label label-info center-block">
+                                    <span class="glyphicon glyphicon-star">
+                                    </span> オプション
+                                </span>
+                            </h4>
+                        </li>
+                        <li>
+                            {{html_anchor("JavaScript:void(0);", "G-CSF", {'class' : 'nav-label option-regimen', 'style' : 'border-top:solid 1px #9A9B9E;'}) }}
+                            {{html_anchor("JavaScript:void(0);", "骨吸収抑制剤", {'class' : 'nav-label option-regimen'}) }}
+                        </li>
+                    </ul>
+                </nav>
+                <!-- コンテンツ -->        
+                <div class="main-content">
+                    <div id="default_content_div">
+                        {{default_content}}
+                    </div>
+                    <div id="fec_content_div" style="display: none">
+                        {{fec_content}}
+                    </div>
+                    <div id="holmon_content_div" style="display: none">
+                        <h3>ホルモン療法</h3>
+                        {{holmon_content}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 固定フッター --> 
+        <footer class="footer">
+            <div class="footerImg">
+                <div class="footer_button">
+                    <button id="btnDiff" type="button" class="btn btn-chemocalc navbar-btn">比較</button>
+                    <button id="btnPrintBase" type="button" class="btn btn-chemocalc navbar-btn">印刷</button>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <!-- 比較画面Modal -->
+    <div class="modal fade" id="diff-modal" data-backdrop="static">
+        <div class="modal-dialog modal-lg" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="modal-label"><!-- タイトルはajaxでセット --></h4>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <!-- 表示内容はajaxでセット -->
+                </div>
+                <div class="modal-footer">
+                    <div class="footerImg">
+                        <div class="footer_button">
+                            <button type="button" class="btn btn-chemocalc" data-dismiss="modal">閉じる</button>
+                            <button id="btnPrintDiff" type="button" class="btn btn-chemocalc">印刷</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+
+
+
+

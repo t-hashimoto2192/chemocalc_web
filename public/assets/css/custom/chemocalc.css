@@ -1,0 +1,193 @@
+/*ヘッダーとフッターを固定してコンテンツをスクロール*/
+html, body {
+    height: 100%;
+    margin: 0;
+}
+.wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.content {
+    flex: 1;
+    overflow: auto;
+}
+
+/*全体の基底色*/
+body { 
+    background: #fff0c2 !important; 
+    -webkit-print-color-adjust: exact;
+}
+
+/*ナビゲーションバー*/
+.navbar-default {
+    border-color: #C9C7C2;
+}
+
+/*サイドメニュー*/
+.navbar-side {
+    background-color: #ffe5b2;
+    bottom: 50px;
+    left: 0px;
+    position: absolute;
+    top: 51px;
+    width: 150px;
+    z-index: 8;
+    overflow: scroll;
+    -webkit-transition: all 0.1s ease-in-out;
+    -moz-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+}
+.navbar-side-menu,
+.navbar-side-menu li {
+    margin:0 0 5 0; padding:0;
+    list-style: none;
+}
+
+/*サイドメニューボタン*/
+.navbar-side-menu li a {
+    display: block;
+    padding: 5px 15px;
+    text-align: center;
+    border-bottom:solid 1px #9A9B9E;
+    color: black;
+}
+
+/*サイドメニューボタン(偶数番目)*/
+.navbar-side-menu li a.odd {
+    background-color: #ffe5a9;
+}
+
+/*サイドメニューボタン_ホバーまたは現在選択中*/
+.navbar-side-menu li a.now,
+.navbar-side-menu li a.eve:hover, 
+.navbar-side-menu li a.odd:hover
+{
+    background-color: #ff9966;
+    text-decoration: none;
+    color: black;
+}
+
+/*サイドメニュー(オプション)*/
+.navbar-side-menu li a.option-regimen {
+    background-color: #b3f0ff;
+}
+
+/*サイドメニュー(オプション)ボタン_ホバーまたは現在選択中*/
+.navbar-side-menu li a.option-regimen.now,
+.navbar-side-menu li a.option-regimen:hover
+{
+    background-color: #00ccff;
+}
+
+/*メインコンテンツ*/
+.main-content {
+    padding-top: 60px; /*固定ヘッダーの高さを考慮*/
+    padding-left: 160px; /*固定サイドメニューの幅を考慮*/
+    padding-bottom: 60px; /*固定フッターの高さを考慮*/
+    padding-right: 10px;
+}
+
+/* フッター用ケミファロゴ＋Chemocalcタイトル画像 */
+.footerImg {
+        background-image: url("../../img/ChemipharLogoAndChemoCalcTitle.png");
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size:300px;
+        display: table;
+        width: 100%;
+}
+
+/*フッターのボタン右寄せ*/
+.footer_button {
+    text-align: right;
+    padding-right: 5px;
+    display: table-cell;
+}
+
+/*BSA算出フォームが折り返された場合のメニューバーの高さに合わせる*/
+@media (max-width: 853px) {
+
+    .main-content {
+        padding-top: 100px; 
+    }
+    .navbar-side {
+        top: 101px;
+    }
+}
+
+/*リンクボタン*/
+a.lnkBtn {
+  color: blue;
+  text-decoration: none;
+  border-bottom: 1px solid blue;
+}
+
+/* 
+* 標準ボタンスタイル
+* http://blog.koalite.com/bbg/
+*/
+.btn-chemocalc { 
+    color: #FFFFFF; 
+    background-color: #797772; 
+    border-color: #66b5e1; 
+} 
+
+.btn-chemocalc:hover, 
+.btn-chemocalc:focus, 
+.btn-chemocalc:active, 
+.btn-chemocalc.active, 
+.open .dropdown-toggle.btn-chemocalc { 
+    color: #FFFFFF; 
+    background-color: #C9C7C2; 
+    border-color: #66b5e1; 
+} 
+
+.btn-chemocalc:active, 
+.btn-chemocalc.active, 
+.open .dropdown-toggle.btn-chemocalc { 
+    background-image: none; 
+} 
+
+.btn-chemocalc.disabled, 
+.btn-chemocalc[disabled], 
+fieldset[disabled] .btn-chemocalc, 
+.btn-chemocalc.disabled:hover, 
+.btn-chemocalc[disabled]:hover, 
+fieldset[disabled] .btn-chemocalc:hover, 
+.btn-chemocalc.disabled:focus, 
+.btn-chemocalc[disabled]:focus, 
+fieldset[disabled] .btn-chemocalc:focus, 
+.btn-chemocalc.disabled:active, 
+.btn-chemocalc[disabled]:active, 
+fieldset[disabled] .btn-chemocalc:active, 
+.btn-chemocalc.disabled.active, 
+.btn-chemocalc[disabled].active, 
+fieldset[disabled] .btn-chemocalc.active { 
+    background-color: #797772; 
+    border-color: #66b5e1; 
+} 
+
+.btn-chemocalc .badge { 
+    color: #797772; 
+    background-color: #FFFFFF; 
+}
+
+/* modalの中のみ印刷 */
+@media print {
+    .modal-open > * {
+        display: none !important;
+    }
+    .modal-open > .modal {
+        display: inherit !important;
+        position: inherit !important;
+    }
+}
+
+/* modalの幅 */
+.modal-dialog { 
+    max-width : 90%;
+    width: auto;
+}
+
+
