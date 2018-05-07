@@ -13,7 +13,7 @@
             <table class="dosage">
                 <tr>
                     <td class="col1">
-                        {{html_anchor("JavaScript:void(0);", "5-FU(" ~ recipe_5fu.dosage ~ "mg/㎡)：", {'class' : 'lnkBtn'}) }}                    
+                        {{html_anchor("JavaScript:void(0);", "5-FU(" ~ recipe_5fu.dosage_str ~ "mg/㎡)：", {'class' : 'lnkBtn', 'id' : 'lnk_Fec5fu', 'data-bind' : 'click: clickRecipeDosageLink'}) }}                    
                     </td>
                     <td class="col2">
                         <span data-bind="text: fec_fu_ref"></span>                   
@@ -30,7 +30,7 @@
                 </tr>
                 <tr>
                     <td class="col1">
-                        {{html_anchor("JavaScript:void(0);", "CPA(500mg/㎡)：", {'class' : 'lnkBtn'}) }}                    
+                        {{html_anchor("JavaScript:void(0);", "CPA(" ~ recipe_cpa.dosage_str ~ "mg/㎡)：", {'class' : 'lnkBtn', 'id' : 'lnk_FecCpa', 'data-bind' : 'click: clickRecipeDosageLink'}) }}                    
                     </td>
                     <td class="col2">
                         <span>0</span>                    

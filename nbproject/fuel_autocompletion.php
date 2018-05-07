@@ -20,15 +20,18 @@ class Config_Yml extends Fuel\Core\Config_Yml {}
 abstract class Controller_Template extends Fuel\Core\Controller_Template {}
 abstract class Controller_Hybrid extends Fuel\Core\Controller_Hybrid {}
 abstract class Controller_Rest extends Fuel\Core\Controller_Rest {}
-class Database_MySQLi_Result extends Fuel\Core\Database_MySQLi_Result {}
-class Database_MySQLi_Connection extends Fuel\Core\Database_MySQLi_Connection {}
-abstract class Database_Connection extends Fuel\Core\Database_Connection {}
-class Database_Exception extends Fuel\Core\Database_Exception {}
+class Database_Schema extends Fuel\Core\Database_Schema {}
+class Database_Sqlsrv_Connection extends Fuel\Core\Database_Sqlsrv_Connection {}
+class Database_Dblib_Connection extends Fuel\Core\Database_Dblib_Connection {}
 class Database_Expression extends Fuel\Core\Database_Expression {}
 abstract class Database_Result extends Fuel\Core\Database_Result {}
+class Database_SQLite_Connection extends Fuel\Core\Database_SQLite_Connection {}
+class Database_SQLite_Builder_Delete extends Fuel\Core\Database_SQLite_Builder_Delete {}
+class Database_SQLite_Builder_Update extends Fuel\Core\Database_SQLite_Builder_Update {}
 class Database_MySQL_Connection extends Fuel\Core\Database_MySQL_Connection {}
-class Database_MySQL_Result extends Fuel\Core\Database_MySQL_Result {}
+class Database_PDO_Cached extends Fuel\Core\Database_PDO_Cached {}
 class Database_PDO_Connection extends Fuel\Core\Database_PDO_Connection {}
+class Database_PDO_Result extends Fuel\Core\Database_PDO_Result {}
 abstract class Database_Query_Builder extends Fuel\Core\Database_Query_Builder {}
 class Database_Query_Builder_Update extends Fuel\Core\Database_Query_Builder_Update {}
 class Database_Query_Builder_Insert extends Fuel\Core\Database_Query_Builder_Insert {}
@@ -36,8 +39,13 @@ class Database_Query_Builder_Join extends Fuel\Core\Database_Query_Builder_Join 
 class Database_Query_Builder_Delete extends Fuel\Core\Database_Query_Builder_Delete {}
 abstract class Database_Query_Builder_Where extends Fuel\Core\Database_Query_Builder_Where {}
 class Database_Query_Builder_Select extends Fuel\Core\Database_Query_Builder_Select {}
-class Database_Result_Cached extends Fuel\Core\Database_Result_Cached {}
 class Database_Query extends Fuel\Core\Database_Query {}
+class Database_MySQLi_Cached extends Fuel\Core\Database_MySQLi_Cached {}
+class Database_MySQLi_Result extends Fuel\Core\Database_MySQLi_Result {}
+class Database_MySQLi_Connection extends Fuel\Core\Database_MySQLi_Connection {}
+abstract class Database_Connection extends Fuel\Core\Database_Connection {}
+class Database_Exception extends Fuel\Core\Database_Exception {}
+class Database_Result_Cached extends Fuel\Core\Database_Result_Cached {}
 class Event_Instance extends Fuel\Core\Event_Instance {}
 class Fieldset_Field extends Fuel\Core\Fieldset_Field {}
 class File_Area extends Fuel\Core\File_Area {}
@@ -48,6 +56,7 @@ abstract class Image_Driver extends Fuel\Core\Image_Driver {}
 class Image_Imagick extends Fuel\Core\Image_Imagick {}
 class Image_Imagemagick extends Fuel\Core\Image_Imagemagick {}
 class Image_Gd extends Fuel\Core\Image_Gd {}
+class Input_Instance extends Fuel\Core\Input_Instance {}
 abstract class Lang_File extends Fuel\Core\Lang_File {}
 class Lang_Yml extends Fuel\Core\Lang_Yml {}
 class Lang_Json extends Fuel\Core\Lang_Json {}
@@ -89,7 +98,7 @@ class DB extends Fuel\Core\DB {}
 class DBUtil extends Fuel\Core\DBUtil {}
 class Debug extends Fuel\Core\Debug {}
 class PhpErrorException extends Fuel\Core\PhpErrorException {}
-class Error extends Fuel\Core\Error {}
+class Errorhandler extends Fuel\Core\Errorhandler {}
 abstract class Event extends Fuel\Core\Event {}
 class Fieldset extends Fuel\Core\Fieldset {}
 class FileAccessException extends Fuel\Core\FileAccessException {}
@@ -106,6 +115,7 @@ class FuelException extends Fuel\Core\FuelException {}
 class Fuel extends Fuel\Core\Fuel {}
 class Html extends Fuel\Core\Html {}
 abstract class HttpException extends Fuel\Core\HttpException {}
+class HttpBadRequestException extends Fuel\Core\HttpBadRequestException {}
 class HttpNoAccessException extends Fuel\Core\HttpNoAccessException {}
 class HttpNotFoundException extends Fuel\Core\HttpNotFoundException {}
 class HttpServerErrorException extends Fuel\Core\HttpServerErrorException {}
@@ -134,6 +144,7 @@ class SecurityException extends Fuel\Core\SecurityException {}
 class Security extends Fuel\Core\Security {}
 class Session extends Fuel\Core\Session {}
 class Str extends Fuel\Core\Str {}
+abstract class TestCase extends Fuel\Core\TestCase {}
 abstract class TestCase extends Fuel\Core\TestCase {}
 class ThemeException extends Fuel\Core\ThemeException {}
 class Theme extends Fuel\Core\Theme {}

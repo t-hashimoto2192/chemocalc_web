@@ -12,10 +12,13 @@
     {{asset_css('custom/bootstrap-print.css') }}
     {{asset_css('custom/chemocalc.css') }}
     {{asset_css('custom/regimen.css') }}
+    {{asset_css('custom/recipeDosageEdit.css') }} 
     {{asset_js('https://code.jquery.com/jquery-3.0.0.min.js' | raw) }}
     {{asset_js('https://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min.js' | raw) }}    
     {{asset_js('bootstrap.js') }}
     {{asset_js('custom/chemocalc.js') }}    
+    {{asset_js('custom/diff.js') }} 
+    {{asset_js('custom/recipeDosageEdit.js') }}  
     <link rel="shortcut icon" href="{{base_url(false) }}/assets/img/favicon.ico" type="image/x-icon">
     <link rel="icon" href="{{base_url(false) }}/assets/img/favicon.ico" type="image/x-icon">
 </head>
@@ -140,6 +143,26 @@
                             <button id="btnPrintDiff" type="button" class="btn btn-chemocalc">印刷</button>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 薬剤容量変更画面Modal -->
+    <div class="modal fade" id="recipeDosageEdit-modal" data-backdrop="static">
+        <div class="modal-dialog modal-lg" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="modal-label"><!-- タイトルはajaxでセット --></h4>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <!-- 表示内容はajaxでセット -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+                    <button id="btnrecipeDosageChange" type="button" class="btn btn-primary">変更</button>
                 </div>
             </div>
         </div>

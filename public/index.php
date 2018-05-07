@@ -1,12 +1,12 @@
 <?php
 /**
- * Fuel is a fast, lightweight, community driven PHP5 framework.
+ * Fuel is a fast, lightweight, community driven PHP 5.4+ framework.
  *
  * @package    Fuel
- * @version    1.7
+ * @version    1.8.1
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2014 Fuel Development Team
+ * @copyright  2010 - 2018 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
@@ -51,11 +51,11 @@ require COREPATH.'classes'.DIRECTORY_SEPARATOR.'autoloader.php';
 class_alias('Fuel\\Core\\Autoloader', 'Autoloader');
 
 // Exception route processing closure
-$routerequest = function($route = null, $e = false)
+$routerequest = function($request = null, $e = false)
 {
 	Request::reset_request(true);
 
-	$route = array_key_exists($route, Router::$routes) ? Router::$routes[$route]->translation : Config::get('routes.'.$route);
+	$route = array_key_exists($request, Router::$routes) ? Router::$routes[$request]->translation : Config::get('routes.'.$request);
 
 	if ($route instanceof Closure)
 	{
@@ -74,6 +74,10 @@ $routerequest = function($route = null, $e = false)
 	{
 		$response = Request::forge($route, false)->execute(array($e))->response();
 	}
+	elseif ($request)
+	{
+		$response = Request::forge($request)->execute(array($e))->response();
+	}
 	else
 	{
 		throw $e;
@@ -90,6 +94,10 @@ try
 
 	// ... and execute the main request
 	$response = $routerequest();
+}
+catch (HttpBadRequestException $e)
+{
+	$response = $routerequest('_400_', $e);
 }
 catch (HttpNoAccessException $e)
 {

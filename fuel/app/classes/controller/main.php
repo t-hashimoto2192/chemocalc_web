@@ -5,8 +5,8 @@ class Controller_Main extends Controller
 
     public function action_index()
     {
-        // viewファイルの指定(views/index.twig)
-        // プレゼンターの指定でもある(presenter/index.php)
+        // viewファイルの指定(views/XXXX.twig)
+        // プレゼンターの指定でもある(presenter/XXXX.php)
         // 上記はセットで必要
         $view = 'main';
 

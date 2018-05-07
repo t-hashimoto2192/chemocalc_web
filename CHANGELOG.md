@@ -1,5 +1,198 @@
 # Changelog
 
+## v1.8.1
+
+### Security advisories
+
+* [**SEC-CORE-008**]:  Crypt encryption has been compromised!
+
+See [the website](https://fuelphp.com/security-advisories) for more information about reported security issues and their status.
+
+### Important fixes, changes, notes. Read them carefully.
+
+* The code has been scanned for new warnings emitted by PHP 7.1.
+* Support for PHPUnit v6 has been added.
+* Support for php-fpm has been improved.
+* Function overloading for multibyte functions is no longer supported.
+* A workaround for PHP bug 55701 has been added.
+
+### Security related
+
+The AES encryption used by the `Crypt` class has been compromised, as reported by Felix Widemann and Nils Rokita from Hamburg University. They have proven that with a powerful GPU, any encoded string can be decoded using brute force in a few minutes. If your application relies on the `Crypt` class (and most do, because the session cookie is using `Crypt` to encode it), upgrading your applications is highly advised!
+
+If you manually want to convert data, for example because you have them stored in the database, simply use:
+````
+$new = \Crypt::encode(\Crypt::decode($old));
+````
+It will detect if the string is using the old encryption or the new encryption. Your `crypt.php` containing the keys will be automatically updated as well (assuming the application has write rights to the file).
+
+**Please note** that due to the stronger encryption mechanism used, the encrypted strings are longer. This might be an issue where you have limited space available, for example is fixed or max width database fields, a session cookie that is already approaching the 4Kb limit, etc. So check the requirements of your application before upgrading!
+
+### Backward compatibility notes
+
+* When you post a form that exceeds `max_input_vars`, in some PHP 7.x versions the excess values were silently dropped, causing incorrect application behavior. `Input` now emits an E_WARNING if PHP doesn't do so.
+* The `Session` classes have been refactored. The methods `create()`/`read()` and `write()` are removed, and `start()` and `close()` added to more closely mimic native session behavior.
+* Database results can now be returned in list or collection (cached) form. A list can only be iterated over, a collection has direct (array) access. By default a collection is returned to retain BC with 1.8.0, but in most cases, a list is faster if random access isn't needed, especially if the resultset is big.
+* Function overloading for multibyte functions is no longer supported. When you have this enabled in your PHP config, Fuel will refuse to start.
+* If you require multibyte agnostic string functions for the functions of type 2 (see http://php.net/manual/en/mbstring.overload.php), use the methods in the `Str` class instead.
+
+### System changes
+
+* Markdown has been updated to v1.7.0.
+* Monolog has been updated to v1.18  (latest composer version).
+* PHPSecLib has been updated to v2.* (latest composer version).
+* URI parsing has been refactored for better NGINX and php-fpm support.
+* The autoloader has been patched to better support classnames in local charactersets.
+
+### Specific classes
+
+* `Asset`: You can now call custom defined asset types the same way as you would built-in types (js,css,img).
+* `Config`: `load()` has been refactored. It no longer overwrites on subsequent loads unless you want to. It also no longer returns `false` in that case, but always returns the loaded config.
+* `Crypt`: Has been rewritten using Sodium. Decrypting old encoded strings is transparent, and will be converted on encrypting.
+* `Date`: `create_from_string()` no longer allows you to create timestamps from before the Unix Epoch, which wasn't supported, and caused weird things to happen...
+* `DB`: you can now use `on_open()` and `on_close()` when creating JOIN clauses.
+* `DB`: UPDATE now supports the same JOIN clauses as SELECT.
+* `DB`: Database result objects are now sanitized automatically when passed to a View.
+* `DB`: You can now choose to return database results as a list (can only be looped over in sequence) or a collection (has random access). A list uses a lot less memory with large resultsets.
+* `DB`: Introduced a `cache()` method to return a list as a collection.
+* `DBUtil`: Now has a `list_indexes()` method.
+* `Fieldset`: Fixed invalid HTML for tabular forms being generated when it contained hidden columns.
+* `Fieldset`: Tabular forms now have built-in support for pagination.
+* `File`: Fixed several bugs that could cause errors when `open_basedir` was in effect.
+* `File`: Fixed broken file locking when using `open_file()`. Lock type validation added.
+* `Form`: Attribute usage with both configured attributes and passed attributes on `open()` calls has been fixed.
+* `Format`: Fixed a bug in which importing a multi-line CSV file could cause data loss.
+* `Image`: Alphablending has been fixed for Imagick.
+* `Image`: The Imagick driver now takes EXIF autorotation data into account, mimicing GD behaviour.
+* `Input`: Only parses raw input when PHP hasn't done so (p.e. on put, patch or delete requests).
+* `Input`: A new `raw()` method has been introduced to access the raw PHP input data (from php://input).
+* `Log`: Error and Exception objects are now passed on to Monolog for more detailing logging options.
+* `Model_Crud`: `count()` now uses the defined database connection, if available.
+* `Model_Crud`: Freezing/unfreezing error fixed when unserializing data into an object.
+* `Module`: You can now configure that you want routes loaded from the module when you load a module.
+* `Pagination`: You can now specify the starting page (number, or 'first' or 'last') when no page number is present in the URL.
+* `Security`: You can now configure NOT to rotate the CSRF token after validation.
+* `Security`: `set_token()` is now a public method, so a token can be rotated manually.
+* `Session`: Broken `destroy()` method has been fixed.
+* `Session`: You can now create a session instance without implicitly starting it.
+* `Session`: You can now reset an active session to an empty state.
+* `View`: Fixed unsanitizing of Traversable objects.
+
+### Packages
+
+* `Auth`: Fixed a bug in the validation rules of the User model.
+* `Auth`: When checking for access, you can now also pass the area name only (matches any right assigned in that area).
+* `Auth`: For security reasons, OpAuths response has been changed from serialized to jsob. This response is now supported.
+* `Oil`: Improved Model and Migration generation.
+* `Oil`: Improved index support when generating migrations from an existing database table.
+* `Oil`: Generated controllers now support pagination on their index page.
+* `Oil`: Generating from existing tables now yield more details about the column.
+* `Parser`: Markdown views no longer uses a dedicated version of Markdown, but the version installed via Composer.
+* `Parser`: Creating a parser view object without a view name passed no longer triggers an exception.
+* `Parser`: Support added for Handlebars templates though the LightnCandy composerpackage.
+* `Orm`: `forge()` now accepts an object implementing ArrayAccess to add data to the ORM object.
+* `Orm`: `Observer_Typing` now supports the fieldtype `encrypt` to transparently encrypt/decrypt data going into the database.
+* `Orm`: `Observer_Typing` now support a field definition 'db_decimals', which you can use if your internal representation is different from the column definition (so objects aren't marked as changed incorrectly).
+* `Orm`: Added a 'caching' config key to the ORM config, to configure default object caching behaviour.
+* `Orm`: Now has a `caching()` method to enable or disable ORM object caching.
+* `Orm`: Now has a `flush_cache()` method to flush the loaded ORM object cache.
+* `Orm`: You can now disconnect related objects by assigning `null` or `array()` to the relation, which behaves identical to using `unset()`.
+* `Email`: Mailgun email header generation has been improved.
+
+## v1.8.0
+
+### Important fixes, changes, notes. Read them carefully.
+
+This version provides full compatibility with PHP 7. To achieve this, the \Fuel\Error class had to be renamed to \Fuel\Errorhandler. The new error handler has full support for PHP 7's new Error exceptions. If your application calls the Error class directly, or has extended the Error class, make sure you make the appropriate changes after you have upgraded!
+
+The oil installer has been updated to use composer to install Fuel, and to provide better support for MacOS.
+
+### Backward compatibility notes
+
+* The included PHPSecLib version has been swapped by the composer package. If your application creates instances of PHPSecLib classes, check your code for compatibility issues, for example with the use of namespaces.
+
+### Removed code (because it was deprecated in v1.7.3 or earlier)
+
+* The old "mysql" DB driver has been removed because of removal in recent PHP versions. You can keep using `mysqli` if for some reason you don't want to use PDO. A new "mysql" driver has been introduced that uses PDO underneath. This should be transparent for most applications.
+
+### Security related
+
+* Because of the swap to the composer PHPSecLib package, the `pbkdf2()` method that was added to the code by the Fuel team is no longer available. Fuel itself now uses the PHP `hash_pbkdf2()` function. If you are using a PHP version < 5.5.0, this function is emulated in base.php.
+* When using file based session, an additional check has been added to make sure the session file is loaded from the configured path.
+* The `Security::clean_input()` now has support for `ArrayAccess` and `Traversable` classes, and now fully recurses into these classes and arrays for a full deep clean.
+* `Security::generate_token()` now uses `random_bytes()`, `openssl_random_pseudo_bytes()` if available, and uses `hash_algos()` with SHA to generate the token hash.
+
+### System changes
+
+* The database classes have been refactored. `Database_Query` is now properly extendable, and `DBUtil` schema manipulations have been abstracted in order to support multiple DB platforms.
+* New drivers have been added for "dblib" (MS-SQL/Sybase), "sqlsrv" (MS-SQL on Windows) and "SQLite".
+* The framework now supports generic HTTP status 400 messages through the new `HttpBadRequestException` exception.
+* When a database migration is run, and the database schema is ahead of the migration configuration file, the status is synced before any migrations are run. This makes sure migrations don't run twice, which may happen when you update multiple application instances using a shared clustered database.
+* You can now correctly use "hybrid" controller (like "\Controller\Something_Class") names as documented.
+* new function `get_composer()` allows direct access to the Composer Autoloader instance.
+* The core's "base.php" code has been optimized for PHP 5.6+.
+* A new route keyword ":everything" has been added, which complements ":any" by also matching with "nothing".
+
+### Specific classes
+
+* The Agent class now supports the definition of an HTTP proxy for downloading the browscap file.
+* An issue in the Agent class is fixed where loading the browscap file could fail if it was defined as type "local".
+* `Arr::key_exists()` now has support for classes implementing `ArrayAccess`.
+* Asset now has a new method `add_type()` to define new types besides "js", "css" and "img". You need to pass a closure that is used to render the HTML for the given type.
+* Asset is now more compatible with Windows platforms when it comes to generating paths and URL's (correct use of slash vs backslash).
+* The Cache file driver has been improved to solve some locking race conditions.
+* Config class no longer caches the result of config keys defined as a closure. Closures are now evaluated at runtime instead of at load time.
+* Fixed a bug in `Controller_Rest` that would cause the HTTP status code to be overwritten when detecting an incorrect return format in production mode.
+* `Controller_Rest` now returns HTTP status 200 by default.
+* When calling the `Database` method `count_last_query()`, any ORDER BY is now stripped from the COUNT query to improve performance.
+* Return type detection has been improved for `DB::query()` calls, for SQL statements like "DESCRIBE", "EXECUTE", "EXPLAIN" and "SHOW".
+* `Date::range_to_array()` could return unexpected values when using more complex intervals. This has been fixed.
+* Added support for "runtime-created functions" in Debug detailed output.
+* Fixed a bug in `File::create_dir()` that causes directory creation to fail if the directory had the same name as its parent.
+* `Form::open()` can now automatically add a CSRF key field when the config key "security.csrf_auto_token" is set.
+* Lang now has a new method `set_lang()`, which allows you to switch the active language, optionally reloading all already loaded language files in this new language.
+* Migrate can now detect circular dependencies (two migrations depending on each other), and will now bail out with a loop detection error message.
+* Migration tasks can now define `before()` and `after()` methods. If either returns false, the migration is skipped. In case of `after()`, that implies the migration is reverted.
+* Mongo_Db has a new `dump()` method to allow dumping a collection or collections for backup purposes.
+* The `Response` class now has a new `set_headers()` method to set multiple headers in one go.
+* `Request_Curl` now returns the complete "raw" response in the response variable "response", which can be accessed in case of a returned http status >= 400.
+* `Request_Curl` now allows you to use fully qualified option names to be set (those starting with "CURLOPT_").
+* The Router now also returns the path of the controller on a found route match.
+* The Security class can now throw an `HttpBadRequestException` instead of a generic `Security Exception` when CSRF validation fails.
+* The Session file driver has been improved to solve some locking race conditions, and an additional validation of the session payload on session load.
+* The "randomness" of generated session ID's has been improved by using `Security::generate_token()` to generate them.
+* The Str class now checks if mbstring functions are available before using them.
+* Theme is now more compatible with Windows platforms when it comes to generating paths and URL's (correct use of slash vs backslash).
+* Validation `valid_date` rule can now handle incomplete date/time formats properly by using defaults for missing values.
+* You can now control the behaviour of the View class on closures assigned to a View variable through the config key "filter_closures".
+* For View variables supporting the `Sanitation` interface, sanitation is disabled after rendering the view to return the object in its original state.
+
+### Packages
+
+* Auth: login drivers now uses the internal PHP function `hash_pbkdf2()` function to hash passwords.
+* Auth: the Opauth driver will now pass a "group_id" back in the result if the login provider supplies this value in its response.
+* Auth: the Opauth driver now has a `get_instance()` method to return the current Opauth instance.
+* Auth: migrations now use the configured "db_connection" from the simpleauth/ormauth config, if defined.
+* Auth: `auth_check()` now also accepts the name of the login driver (as a string), besides the login driver instance.
+* Auth: updated the Auth classes to support the PHPSecLib composer package.
+* Email: Fixed bug in text wrapping where spaces could be stripped from HTML tags.
+* Email: Added a check on the availability of mbstring extensions before its functions are used.
+* Oil: migrate now has a new "--installed" option, which only runs migrations for packages and modules defined in the "always_load" section of the config. You can use it in conjunction with "--modules" and "--packages" to include some manually loaded modules or packages.
+* Oil: new "--with-test" option to scaffolding will generate corresponding test classes for each class generated.
+* Oil: "fromdb" task has a new "migration" command that allows you to generate migrations from an existing database. NOTE: these need to be checked as not all details can be retrieved from an existing table!
+* Orm: Fixed SQL generation error when `DB::expression()` was used at the left-hand side of a query statement.
+* Orm: Fixed a decimal point positioning issue in the Typing observer.
+* Orm: Fixed a problem in the Temporal model where the incorrect primary key values where used when generating a WHERE clause.
+* Orm: Added the option to `dump_tree()` to include a path URI, mainly useful when working with nested sets.
+* Orm: The typing observer can now handle floats in all locales (the decimal point is comma problem).
+* Orm: Implemented a workaround for slow access of large array entries by reference (see https://bugs.php.net/bug.php?id=68624)
+* Orm: A bug that caused related data in a many-many relation to be incorrectly hydrated has been fixed.
+* Parser: It is now possible to load Mustache partials. If none are defined, the UTF-8 partial is loaded by default.
+* Parser: for View variables supporting the `Sanitation` interface, sanitation is disabled after rendering the view to return the object in its original state.
+* Parser: for jade templates, now the Talesoft Jade renderer is supported too, besides the already supported Everzet renderer.
+* Parser: fixed a bug that caused loading template files with multiple dots to fail.
+* Parser: Twig templates now have access to the `Auth::get()` method through "auth_get".
+
 ## v1.7.3
 
 ### Important fixes, changes, notes. Read them carefully.
@@ -15,6 +208,10 @@ The final version will be v1.8, which will be released at the same time the firs
 * When loading multiple modules or packages through the `load()` method, the result will now only be `true` if all could be succesfully loaded.
 * When Fuel is run is CLI mode, output buffering is now disabled. Note that it might still buffer, for example because you have enabled buffering globally in your php.ini.
 * The `match_collection` validation rule now always returns `true` if no collection was passed to match against.
+
+### Removed code (because it was deprecated in v1.6 or earlier)
+
+n/a
 
 ### Security related
 
@@ -42,7 +239,8 @@ The final version will be v1.8, which will be released at the same time the firs
 * __Error__: the log level used for errors is now configurable.
 * __Form__: the `label()` method now has support for the "for" attribute.
 * __Format__: new parameter for `to_xml()` allows you to specify how booleans must be represented (0/1 vs false/true).
-* __Inflector__: the inflector ruleset has been moved to a lang file, so it can easily be amended, and provide support for introducting non-english language rulesets.
+* __Inflector__: the inflector ruleset has been moved to a lang file, so it can easily be
+amended, and provide support for introducting non-english language rulesets.
 * __Input__: new `query_string()` method to return the main requests query string.
 * __Input__: a header value lookup is now done in a case-insensitive manner.
 * __Lang__: now allows you to load the same lang filename for different languages concurrently.
@@ -57,7 +255,7 @@ The final version will be v1.8, which will be released at the same time the firs
 * __Session__: the `rotation_time` configuration key can now be set to false to completely disable automatic session id rotation. Use with care!
 * __Theme__: you can now specify the other in which partials must be rendered for output. This allows you to render content before headers and footers, needed to dynamically add assets.
 * __Theme__: the `presenter()` method now allows you to pass a custom view name (like `Presenter::forge()` that is theme aware.
-* __Validation__: the `match_collection` rule can now be run in `strict` mode, which meanly helps when validating booleans.
+__Validation__: the `match_collection` rule can now be run in `strict` mode, which meanly helps when validating booleans.
 * __Validation__: new rule `specials` allows matching against non-latin characters considered alphabetic in unicode.
 * __View__: `get()` and `set()` now supports dot-notation for getting values from stored arrays.
 

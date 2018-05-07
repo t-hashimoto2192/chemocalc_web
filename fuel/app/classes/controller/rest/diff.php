@@ -29,7 +29,7 @@ class Controller_Rest_Diff extends Controller_Rest
 
         return $this->response(array(
                     'title' => '各治療費の比較',
-                    'content' => View_Twig::forge('diff/index', $data)->render() //仮
+                    'content' => View_Twig::forge('modal/diff', $data)->render() //仮
         ));
     }
 

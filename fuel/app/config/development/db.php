@@ -6,7 +6,7 @@
 return array(
 	'default' => array(
 		'connection'  => array(
-			'dsn'        => 'mysql:host=localhost;dbname=medina_price',
+			'dsn'        => 'mysql:host=localhost:13306;dbname=medina_price',
 			'username'   => 'root',
 			'password'   => 'cl2018',
 		),

@@ -21,10 +21,16 @@ var bsaViewModel = function () {
         changeRegimen(event.target);
     };
     
+    /* 薬剤容量リンクのクリックイベント */
+    this.clickRecipeDosageLink = function(data, event) {
+        recipeDosageEditModalShow(event.target);
+    };
+    
     /* ★☆★ 療法別画面 ★☆★ */
     
     /* FEC */
     this.fec_fu_ref = ko.observable('0');
+    this.fec_fu_val = ko.observable('');
 };
 
 /**
@@ -54,15 +60,6 @@ function calcBsa(sVal, wVal) {
             0.007184;
     return ret = Math.ceil(calcVal * 1000) / 1000; // 小数第三位で切り捨て
 }
-
-/**
- * サイドメニューのボタンクリックイベント
- */
-//$(document).on('click', '.navbar-side-menu li a', function () {
-//    
-//    changeRegimen(this);
-//
-//});
 
 /**
  * 療法切替
@@ -107,11 +104,11 @@ $(document).on('click', '#btnDiff', function () {
         url: 'rest/diff/list.json',
         data: param,
         success: function (result) {
-            $('#modal-label').html(result['title']);
-            $('#modal-body').html(result['content']);
+            $('#diff-modal').find('#modal-label').html(result['title']);
+            $('#diff-modal').find('#modal-body').html(result['content']);
             $('#diff-modal').modal('show');
             // テーブル行のスタイル設定
-            $("#diffTable").find("tbody > tr:even").addClass("info");
+            $('#diff-modal').find('#diffTable').find("tbody > tr:even").addClass("info");
         },
         error: function (result) {
             alert('error:' + result.status + '(' + result.statusText + ')');
@@ -127,50 +124,33 @@ $(document).on('click', '#btnPrintBase', function () {
 });
 
 /**
- * 比較画面X割負担ボタンクリックイベント
- * 割引率を変更して再計算後body部のみ書き換える
+ * 薬剤容量編集モーダル表示
+ * @param {type} linkObj リンクボタン
+ * @returns {undefined}
  */
-$(document).on('click', 'button[id^="btnDiscont_"]', function () {
-
-    // ボタンのid(btnDiscont_XXX)を取得
-    var btnId = $(this).attr("id");
-
-    // ボタンのidの最後の"_"以降から負担割合(XXX)を取得
-    var discount_per = btnId.substring(btnId.lastIndexOf('_') + 1, btnId.length);
-    // テーブル行のスタイル
-    var rowClass = 'info';
-    if (discount_per == 2) {
-        rowClass = 'warning';
-    } else if (discount_per == 1) {
-        rowClass = 'danger';
-    }
-
-    var param = {discount_per: discount_per};
+function recipeDosageEditModalShow(linkObj) {
+    
+    // リンクのid(lnk_XXX)を取得
+    var lnkId = $(linkObj).attr("id");
+    
+    // モーダル表示時は3割負担固定
+    var param = {lnk_id: lnkId};
+    
     $.ajax({type: 'GET',
-        url: 'rest/diff/list.json',
+        url: 'rest/recipeDosageEdit/init.json',
         data: param,
         success: function (result) {
-            // 既に開いているbody部のみ書き換え
-            $('#modal-body').html(result['content']);
+            $('#recipeDosageEdit-modal').find('#modal-label').html(result['title']);
+            $('#recipeDosageEdit-modal').find('#modal-body').html(result['content']);
+            $('#recipeDosageEdit-modal').modal('show');
             // テーブル行のスタイル設定
-            $("#diffTable").find("tbody > tr:even").addClass(rowClass);
+//            $('#recipeDosageEdit-modal').find('#diffTable').find("tbody > tr:even").addClass("info");
         },
         error: function (result) {
             alert('error:' + result.status + '(' + result.statusText + ')');
         }});
-});
+}
 
-/**
- * 比較画面モーダル印刷ボタンクリックイベント
- */
-$(document).on('click', '#btnPrintDiff', function () {
-    window.print();
-    return false;
-});
 
-$(document).on('shown.bs.modal', '#diff-modal', function () {
-})
-$(document).on('hidden.bs.modal', '#diff-modal', function () {
-})
 
 
