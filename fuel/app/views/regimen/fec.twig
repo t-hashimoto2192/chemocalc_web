@@ -13,10 +13,11 @@
             <table class="dosage">
                 <tr>
                     <td class="col1">
-                        {{html_anchor("JavaScript:void(0);", "5-FU(" ~ recipe_5fu.dosage_str ~ "mg/㎡)：", {'class' : 'lnkBtn', 'id' : 'lnk_Fec5fu', 'data-bind' : 'click: clickRecipeDosageLink'}) }}                    
+                        {#{{html_anchor("JavaScript:void(0);", "5-FU(" ~ recipe_5fu.dosage_str ~ "mg/㎡)：", {'class' : 'lnkBtn', 'id' : 'lnk_Fec5fu', 'data-bind' : 'click: clickRecipeDosageLink'}) }} #}
+                        <a class="lnkBtn" id="lnk_Fec5fu" data-bind="click: clickRecipeDosageLink" href="JavaScript:void(0);"><span>5-FU({{recipe_5fu.dosage_str}}/㎡)：</span></a>
                     </td>
                     <td class="col2">
-                        <span data-bind="text: fec_fu_ref"></span>                   
+                        <span id ="Fec5fu_value">{{recipe_5fu.dosage_value}}</span>                   
                     </td>
                     <td class="col3">
                         mg/body                   
@@ -30,16 +31,17 @@
                 </tr>
                 <tr>
                     <td class="col1">
-                        {{html_anchor("JavaScript:void(0);", "CPA(" ~ recipe_cpa.dosage_str ~ "mg/㎡)：", {'class' : 'lnkBtn', 'id' : 'lnk_FecCpa', 'data-bind' : 'click: clickRecipeDosageLink'}) }}                    
+                        {#{{html_anchor("JavaScript:void(0);", "CPA(" ~ recipe_cpa.dosage_str ~ "mg/㎡)：", {'class' : 'lnkBtn', 'id' : 'lnk_FecCpa', 'data-bind' : 'click: clickRecipeDosageLink'}) }}  #}
+                        <a class="lnkBtn" id="lnk_FecCpa" data-bind="click: clickRecipeDosageLink" href="JavaScript:void(0);"><span>5-FU({{recipe_cpa.dosage_str}}/㎡)：</span></a>
                     </td>
                     <td class="col2">
-                        <span>0</span>                    
+                        <span data-bind="text: fec_cpa_ref"></span>                   
                     </td>
                     <td class="col3">
                         mg/body                   
                     </td>
                     <td class="col4">
-                        <input type="text" class="form-control" size="8"  data-bind="value: fec_fu_val"/>    
+                        <input type="text" class="form-control" size="8"  data-bind="value: fec_cpa_val"/>    
                     </td>
                     <td class="col5">
                         mg/body                   

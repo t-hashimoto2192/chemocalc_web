@@ -21,6 +21,9 @@ class Presenter_Main extends Presenter
         $data_fec['recipe_cpa'] = Model_Recipe::find(Constants\RecipeDataID::FEC_CPA)->to_array();
 
         $this->fec_content = View_Twig::forge('regimen/fec', $data_fec);
+
+        // ◆◆◆ DOC療法ページ ◆◆◆
+        $this->doc_content = View_Twig::forge('regimen/doc');
     }
 
 }

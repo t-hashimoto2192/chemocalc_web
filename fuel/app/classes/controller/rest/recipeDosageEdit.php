@@ -26,6 +26,9 @@ class Controller_Rest_RecipeDosageEdit extends Controller_Rest
             case 'lnk_FecCpa':
                 $recipe_id = Constants\RecipeDataID::FEC_CPA;
                 break;
+            case 'lnk_DocDoc':
+                $recipe_id = Constants\RecipeDataID::DOC_DOC;
+                break;
         endswitch;
 
         $recipe = Model_Recipe::find($recipe_id);

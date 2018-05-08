@@ -1,0 +1,114 @@
+{# ベースとなるテンプレートを継承 #}
+{% extends "base.twig" %}
+{#
+    【DOC療法】 
+#}
+{#療法名#}
+{% block regimenName %}DOC療法{% endblock regimenName %}
+
+{#使用薬剤・薬価表示#}
+{% block regimenContent %}
+    <div class="row">
+        <div class="col-md-12">
+            <table class="dosage">
+                <tr>
+                    <td class="col1">
+                        <a class="lnkBtn" id="lnk_DocDoc" data-bind="click: clickRecipeDosageLink" href="JavaScript:void(0);">DOC(<span data-bind="text: docDosageLnk"></span>mg/㎡)</a>                   
+                    </td>
+                    <td class="col2"  data-bind="text: docDosageLbl">                 
+                    </td>
+                    <td class="col3">
+                        mg/body                   
+                    </td>
+                    <td class="col4">
+                        <input type="text" class="form-control" size="8"  data-bind="value: docDosageTxt"/>    
+                    </td>
+                    <td class="col5">
+                        mg/body                   
+                    </td>
+                </tr>
+            </table>
+        </div>    
+    </div> 
+    <div class="row">
+        <div class="col-md-12">
+            <table class="price">
+                <tr>
+                    <td class="col1">
+                        DOC薬価：                    
+                    </td>
+                    <td class="col2" data-bind="text: docPrice">             
+                    </td>
+                    <td class="col3">
+                        円                   
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        合計薬価：                    
+                    </td>
+                    <td class="col2" data-bind="text: docTotalPrice">               
+                    </td>
+                    <td class="col3">
+                        円                   
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        3割負担：                    
+                    </td>
+                    <td class="col2" data-bind="text: docTotalPrice30per">                 
+                    </td>
+                    <td class="col3">
+                        円                   
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        2割負担：                    
+                    </td>
+                    <td class="col2" data-bind="text: docTotalPrice20per">                 
+                    </td>
+                    <td class="col3">
+                        円                   
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col1">
+                        1割負担：                    
+                    </td>
+                    <td class="col2" data-bind="text: docTotalPrice10per">                
+                    </td>
+                    <td class="col3">
+                        円                   
+                    </td>
+                </tr>
+            </table>
+        </div> 
+    </div>                       
+{% endblock regimenContent %}
+
+{#薬剤の規格#}
+{% block regimenMedina %}
+    <div class="row" style="padding-bottom: 10px;">
+        <span style="font-weight: bold;font-size: medium;">DOC：</span>
+    </div> 
+    <div class="row">
+        <table class="table table-bordered table-condensed table-hover table-striped tblMedinaList" id="tblMedinaDoc">
+            <tr>
+                <td>
+                    １，０００ｍｇ１瓶
+                </td>
+            </tr>
+            <tr>
+                <td class="active">　</td>
+            </tr>
+            <tr>
+                <td>　</td>
+            </tr>
+            <tr>
+                <td class="active">　</td>
+            </tr>
+        </table>
+    </div> 
+{% endblock regimenMedina %}

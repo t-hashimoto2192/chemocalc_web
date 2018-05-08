@@ -1,7 +1,5 @@
 /* knockout.js ViewModel定義 */
-
-// 体表面積計算用ViewModel TODO:全体でひとつにするかも
-var bsaViewModel = function () {
+function settingViewModel() {
 
     /* 体表面積計算フォーム */
     // 身長
@@ -12,26 +10,41 @@ var bsaViewModel = function () {
     this.bsa = ko.computed(function () {
         var sVal = this.stature();
         var wVal = this.weight();
-        var bsaVal = calcBsa(sVal, wVal);  
+        var bsaVal = calcBsa(sVal, wVal);
         return bsaVal;
     }, this);
 
     /* サイドメニューのクリックイベント */
-    this.clickMenu = function(data, event) {
+    this.clickMenu = function (data, event) {
         changeRegimen(event.target);
     };
-    
+
     /* 薬剤容量リンクのクリックイベント */
-    this.clickRecipeDosageLink = function(data, event) {
+    this.clickRecipeDosageLink = function (data, event) {
         recipeDosageEditModalShow(event.target);
     };
-    
+
     /* ★☆★ 療法別画面 ★☆★ */
-    
+
     /* FEC */
-    this.fec_fu_ref = ko.observable('0');
     this.fec_fu_val = ko.observable('');
-};
+
+    this.fec_cpa_val = ko.observable('');
+    this.fec_cpa_ref = ko.observable('');
+
+    /* DOC */
+    this.docDosageLnk = ko.observable();
+    this.docDosageLbl = ko.observable();
+    this.docDosageTxt = ko.observable('');
+    this.docPrice = ko.observable('');
+    this.docTotalPrice = ko.observable('');
+    this.docTotalPrice30per = ko.observable('');
+    this.docTotalPrice20per = ko.observable('');
+    this.docTotalPrice10per = ko.observable('');
+}
+;
+// グローバル変数として定義
+var viewModel = new settingViewModel();
 
 /**
  * onload処理
@@ -39,9 +52,44 @@ var bsaViewModel = function () {
  */
 window.onload = function () {
 
-    // 体表面積計算用ViewModel
-    ko.applyBindings(new bsaViewModel());//, $("#bsaCalcForm")[0]);//複数の場合はバインド先要素を指定
+    // ローカルストレージに保存済のレシピ容量配列を取得
+    var recipeDosageArray = JSON.parse(localStorage.getItem("recipe_dosage_array"));
+
+    // TODO:↑画面毎のajax初期化で参照する
+
+    // DOC療法
+    reloadDoc(recipeDosageArray);
+
+
+
+    // knockout.js ViewModelバインド
+    ko.applyBindings(viewModel);
 };
+
+function reloadDoc(arrayVal) {
+    // DOC用ドセタキセルのレシピ
+    var docRecipe = getRecipeDosageArrayById(arrayVal, '25');
+    if (docRecipe) {
+        viewModel.docDosageLnk = docRecipe['inputDosage'];
+    } else {
+        // DBから取得
+    }
+}
+
+function getRecipeDosageArrayById(recipeDosageArray, recipeIdVal) {
+    var ret;
+    if (!recipeDosageArray) {
+        return false;
+    } else {
+        jQuery.each(recipeDosageArray, function (index, value) {
+            if (value['recipeId'] === recipeIdVal) {
+                ret = recipeDosageArray[index];
+                return false;
+            }
+        });
+        return ret;
+    }
+}
 
 /**
  * 体表面積を計算
@@ -67,7 +115,7 @@ function calcBsa(sVal, wVal) {
  * @returns {undefined}
  */
 function changeRegimen(linkObj) {
-    
+
     // 最終クリック個所に色を残す
     $(".navbar-side-menu li a").removeClass("now");
     $(linkObj).addClass("now");
@@ -80,8 +128,8 @@ function changeRegimen(linkObj) {
             btnId ?
             btnId.substring(btnId.lastIndexOf('_') + 1, btnId.length)
             : "other"; // idはbtn_XXXの形式に統一するが一応
-            
-    // hiddenに格納
+
+    // hiddenに格納　// TODO:つかってない
     $('#nowRegimen').val(targetName);
 
     // 対象画面のdiv(XXX_content_div)に表示を切り替える    
@@ -129,13 +177,12 @@ $(document).on('click', '#btnPrintBase', function () {
  * @returns {undefined}
  */
 function recipeDosageEditModalShow(linkObj) {
-    
+
     // リンクのid(lnk_XXX)を取得
     var lnkId = $(linkObj).attr("id");
-    
-    // モーダル表示時は3割負担固定
+
     var param = {lnk_id: lnkId};
-    
+
     $.ajax({type: 'GET',
         url: 'rest/recipeDosageEdit/init.json',
         data: param,

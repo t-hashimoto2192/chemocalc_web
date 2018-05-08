@@ -65,7 +65,7 @@
                             {{html_anchor("JavaScript:void(0);", "FEC", {'id' : 'btn_fec', 'class' : 'nav-label eve', 'data-bind' : 'click: clickMenu'}) }}
                             {{html_anchor("JavaScript:void(0);", "EC", {'class' : 'nav-label odd', 'data-bind' : 'click: clickMenu'}) }}
                             {{html_anchor("JavaScript:void(0);", "AC", {'class' : 'nav-label eve', 'data-bind' : 'click: clickMenu'}) }}
-                            {{html_anchor("JavaScript:void(0);", "DOC", {'class' : 'nav-label odd', 'data-bind' : 'click: clickMenu'}) }}
+                            {{html_anchor("JavaScript:void(0);", "DOC", {'id' : 'btn_doc', 'class' : 'nav-label odd', 'data-bind' : 'click: clickMenu'}) }}
                             {{html_anchor("JavaScript:void(0);", "Her+DOC", {'class' : 'nav-label eve', 'data-bind' : 'click: clickMenu'}) }}
                             {{html_anchor("JavaScript:void(0);", "TC", {'class' : 'nav-label odd', 'data-bind' : 'click: clickMenu'}) }}
                             {{html_anchor("JavaScript:void(0);", "PTX", {'class' : 'nav-label eve', 'data-bind' : 'click: clickMenu'}) }}
@@ -105,6 +105,9 @@
                     </div>
                     <div id="fec_content_div" style="display: none">
                         {{fec_content}}
+                    </div>
+                    <div id="doc_content_div" style="display: none">
+                        {{doc_content}}
                     </div>
                     <div id="holmon_content_div" style="display: none">
                         <h3>ホルモン療法</h3>
