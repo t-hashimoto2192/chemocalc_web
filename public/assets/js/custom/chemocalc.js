@@ -1,48 +1,3 @@
-/* knockout.js ViewModel定義 */
-function settingViewModel() {
-
-    /* 体表面積計算フォーム */
-    // 身長
-    this.stature = ko.observable('');
-    // 体重
-    this.weight = ko.observable('');
-    // 体表面積
-    this.bsa = ko.computed(function () {
-        var sVal = this.stature();
-        var wVal = this.weight();
-        var bsaVal = calcBsa(sVal, wVal);
-        return bsaVal;
-    }, this);
-
-    /* サイドメニューのクリックイベント */
-    this.clickMenu = function (data, event) {
-        changeRegimen(event.target);
-    };
-
-    /* 薬剤容量リンクのクリックイベント */
-    this.clickRecipeDosageLink = function (data, event) {
-        recipeDosageEditModalShow(event.target);
-    };
-
-    /* ★☆★ 療法別画面 ★☆★ */
-
-    /* FEC */
-    this.fec_fu_val = ko.observable('');
-
-    this.fec_cpa_val = ko.observable('');
-    this.fec_cpa_ref = ko.observable('');
-
-    /* DOC */
-    this.docDosageLnk = ko.observable();
-    this.docDosageLbl = ko.observable();
-    this.docDosageTxt = ko.observable('');
-    this.docPrice = ko.observable('');
-    this.docTotalPrice = ko.observable('');
-    this.docTotalPrice30per = ko.observable('');
-    this.docTotalPrice20per = ko.observable('');
-    this.docTotalPrice10per = ko.observable('');
-}
-;
 // グローバル変数として定義
 var viewModel = new settingViewModel();
 
@@ -55,35 +10,35 @@ window.onload = function () {
     // ローカルストレージに保存済のレシピ容量配列を取得
     var recipeDosageArray = JSON.parse(localStorage.getItem("recipe_dosage_array"));
 
-    // TODO:↑画面毎のajax初期化で参照する
-
     // DOC療法
     reloadDoc(recipeDosageArray);
-
-
 
     // knockout.js ViewModelバインド
     ko.applyBindings(viewModel);
 };
 
 function reloadDoc(arrayVal) {
+    console.log("◆function reloadDoc◆");
     // DOC用ドセタキセルのレシピ
     var docRecipe = getRecipeDosageArrayById(arrayVal, '25');
     if (docRecipe) {
-        viewModel.docDosageLnk = docRecipe['inputDosage'];
+        console.log("★BEFORE★viewModel.docDosageLnk：" + viewModel.docDosageLnk);
+//        viewModel.docDosageLnk = docRecipe['inputDosage'];
+viewModel.docDosageLnk(docRecipe['inputDosage']);
+        console.log("★AFTER★viewModel.docDosageLnk：" + viewModel.docDosageLnk);
     } else {
         // DBから取得
     }
 }
 
-function getRecipeDosageArrayById(recipeDosageArray, recipeIdVal) {
+function getRecipeDosageArrayById(arrayVal, recipeIdVal) {
     var ret;
-    if (!recipeDosageArray) {
+    if (!arrayVal) {
         return false;
     } else {
-        jQuery.each(recipeDosageArray, function (index, value) {
+        jQuery.each(arrayVal, function (index, value) {
             if (value['recipeId'] === recipeIdVal) {
-                ret = recipeDosageArray[index];
+                ret = arrayVal[index];
                 return false;
             }
         });
@@ -178,24 +133,28 @@ $(document).on('click', '#btnPrintBase', function () {
  */
 function recipeDosageEditModalShow(linkObj) {
 
+console.log("◆function recipeDosageEditModalShow◆");
+
     // リンクのid(lnk_XXX)を取得
     var lnkId = $(linkObj).attr("id");
-
     var param = {lnk_id: lnkId};
+    
+    console.log("★lnkId：" + lnkId);
 
-    $.ajax({type: 'GET',
+    $.ajax({
         url: 'rest/recipeDosageEdit/init.json',
-        data: param,
-        success: function (result) {
-            $('#recipeDosageEdit-modal').find('#modal-label').html(result['title']);
-            $('#recipeDosageEdit-modal').find('#modal-body').html(result['content']);
-            $('#recipeDosageEdit-modal').modal('show');
-            // テーブル行のスタイル設定
-//            $('#recipeDosageEdit-modal').find('#diffTable').find("tbody > tr:even").addClass("info");
-        },
-        error: function (result) {
-            alert('error:' + result.status + '(' + result.statusText + ')');
-        }});
+        type: 'GET',
+        data: param
+    }).done(function (result) {
+        $('#recipeDosageEdit-modal').find('#modal-label').html(result['title']);
+        $('#recipeDosageEdit-modal').find('#modal-body').html(result['content']);
+        $('#recipeDosageEdit-modal').modal('show');
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        $("#XMLHttpRequest").html("XMLHttpRequest : " + jqXHR.status);
+        $("#textStatus").html("textStatus : " + textStatus);
+        $("#errorThrown").html("errorThrown : " + errorThrown);
+    }).always(function () {
+    });
 }
 
 

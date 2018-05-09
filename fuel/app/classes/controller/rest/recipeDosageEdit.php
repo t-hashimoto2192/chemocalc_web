@@ -32,7 +32,9 @@ class Controller_Rest_RecipeDosageEdit extends Controller_Rest
         endswitch;
 
         $recipe = Model_Recipe::find($recipe_id);
+
         $data['data_recipe'] = $recipe->to_array();
+
         // $data['data_recipe_json'] = Format::forge($recipe)->to_json(); //jsonで格納するサンプル
         // TODO:localStorageに値があればそちらを優先したい
         // タイトル
