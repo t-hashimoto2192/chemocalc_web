@@ -13,12 +13,22 @@ namespace Chemocalc\Util;
  *
  * @author t-has
  */
-class RegimenUtil
+
+namespace Chemocalc\Util;
+
+class ChemocalcUtil
 {
 
-    public static function fuga($var)
+    /**
+     * 整数値と整数値の指数を計算して固定小数値にします。
+     * @param value 元になる値
+     * @param value_exp 指数の値
+     * @return 計算結果
+     */
+    public static function expCalculate($value, $value_exp)
     {
-        return $var . ' fuga.';
+        $scale = bcmul('-1', $value_exp);
+        return bcdiv($value, bcpow('10', $scale), $scale);
     }
 
 }

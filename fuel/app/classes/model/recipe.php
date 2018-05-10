@@ -1,5 +1,7 @@
 <?php
 
+use Chemocalc\Util as Util;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -24,6 +26,25 @@ class Model_Recipe extends Orm\Model
         'default_dosage_exp',
         'regimen_id');
 
+    //recipe→ commonname_per_recipe → commonname → commonname_per_medina→medina
+
+    /**
+     * リレーション定義(一対一)
+     * @var type
+     */
+    protected static $_has_one = array(
+        'commonname_per_recipe' => array(
+            'model_to' => 'Model_Commonname_Per_Recipe',
+            'key_from' => 'id',
+            'key_to' => 'recipe_id',
+        ),
+        'recipe_per_medina' => array(
+            'model_to' => 'Model_Recipe_Per_Medina',
+            'key_from' => 'id',
+            'key_to' => 'recipe_id',
+        ),
+    );
+
     /**
      * to_arrayのオーバーライド
      * 演算項目を追加で設定する
@@ -33,8 +54,8 @@ class Model_Recipe extends Orm\Model
     public function to_array($custom = false, $recurse = false, $eav = false)
     {
         $ret = parent::to_array();
-        $ret = array_merge($ret, array('dosage_str' => $this->calculateDosageToString($this->dosage, $this->dosage_exp)));
-        $ret = array_merge($ret, array('default_dosage_str' => $this->calculateDosageToString($this->default_dosage, $this->default_dosage_exp)));
+        $ret = array_merge($ret, array('dosage_str' => Util\ChemocalcUtil::expCalculate($this->dosage, $this->dosage_exp)));
+        $ret = array_merge($ret, array('default_dosage_str' => Util\ChemocalcUtil::expCalculate($this->default_dosage, $this->default_dosage_exp)));
         return $ret;
     }
 

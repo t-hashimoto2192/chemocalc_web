@@ -1,0 +1,32 @@
+/*
+薬剤容量編集画面のスタイル
+*/
+
+/*容量変更領域テーブル設定*/
+table.dosage_edit {
+  margin-bottom: 20px;
+}
+table.dosage_edit > tbody > tr > th {
+  padding: 3px 3px;
+}
+table.dosage_edit > tbody > tr > td {
+  padding: 5px 5px;
+}
+table.dosage_edit > tbody > tr > th.col1,th.col2, th.col3 {
+  width: 150px;
+  text-align: center;
+}
+table.dosage_edit > tbody > tr > td.col1, td.col3 {
+  text-align: right;
+}
+table.dosage_edit > tbody > tr > td.col2 {
+  text-align: center;
+}
+/*table.dosage > tbody > tr > th.col2, td.col3, td.col5{
+  width: 70px;
+  text-align: center;
+}
+table.dosage > tbody > tr > td.col4{
+  width: 80px;
+  text-align: right;
+}*/

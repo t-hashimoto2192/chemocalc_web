@@ -1,14 +1,13 @@
 <?php
 
-class Model_Recipe_Per_Medina extends \Orm\Model
+class Model_Commonname_Per_Medina extends \Orm\Model
 {
 
-    protected static $_table_name = 'recipe_per_medina';
+    protected static $_table_name = 'commonname_per_medina';
     protected static $_properties = array(
         'id',
-        'commonname_id',
-        'recipe_id',
         'medina_id',
+        'commonname_id',
     );
 
     /**

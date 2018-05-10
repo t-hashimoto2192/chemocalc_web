@@ -1,4 +1,17 @@
-// グローバル変数として定義
+// 定数
+
+/**
+ * レシピデータのローカルストレージ保存キー
+ * ※バージョンアップ時の対応
+ * ・1.この値を用いたローカルストレージデータ削除処理を追記する
+ * ・2.値を変更する
+ * @type String
+ */
+const LS_KEY_RECIPE_DATA = 'recipe_data_array_2018';
+
+// グローバル変数
+
+// knockout.jsのViewModel
 var viewModel = new settingViewModel();
 
 /**
@@ -7,44 +20,78 @@ var viewModel = new settingViewModel();
  */
 window.onload = function () {
 
-    // ローカルストレージに保存済のレシピ容量配列を取得
-    var recipeDosageArray = JSON.parse(localStorage.getItem("recipe_dosage_array"));
+    console.log("▼▼▼ function window.onload");
 
-    // DOC療法
-    reloadDoc(recipeDosageArray);
+    // ローカルストレージに保存済のレシピ情報配列の有無を確認
+    if (!localStorage.getItem(LS_KEY_RECIPE_DATA)) {
+        console.log("★ ①localStorageにデータ無し");
+        // 無ければDBのデータで初期設定
+        // ※ローカルストレージにデータ保存後の各画面の初期化はコールバック内で実行
+        initializeLsRecipeDataArray();
+    } else {
+        console.log("★ localStorageに既存データあり");
+        // 各画面の初期化
+        initializeContentDiv();
+    }
 
     // knockout.js ViewModelバインド
     ko.applyBindings(viewModel);
+
+    console.log("▲▲▲ function window.onload");
 };
 
-function reloadDoc(arrayVal) {
-    console.log("◆function reloadDoc◆");
-    // DOC用ドセタキセルのレシピ
-    var docRecipe = getRecipeDosageArrayById(arrayVal, '25');
-    if (docRecipe) {
-        console.log("★BEFORE★viewModel.docDosageLnk：" + viewModel.docDosageLnk);
-//        viewModel.docDosageLnk = docRecipe['inputDosage'];
-viewModel.docDosageLnk(docRecipe['inputDosage']);
-        console.log("★AFTER★viewModel.docDosageLnk：" + viewModel.docDosageLnk);
-    } else {
-        // DBから取得
-    }
+/**
+ * 各治療費計算シート領域の初期化
+ * @returns {undefined}
+ */
+function initializeContentDiv(){
+    // ローカルストレージに保存済のレシピ情報配列を取得
+    var recipeArray = JSON.parse(localStorage.getItem(LS_KEY_RECIPE_DATA));
+    console.log("★ ③localStorageより取得");
+
+    // 各治療費計算シート画面のデータ参照個所を設定
+
+    // -- DOC療法
+    reloadDoc(getRecipeDataFromArrayById(recipeArray, '25'));    
 }
 
-function getRecipeDosageArrayById(arrayVal, recipeIdVal) {
-    var ret;
-    if (!arrayVal) {
-        return false;
-    } else {
-        jQuery.each(arrayVal, function (index, value) {
-            if (value['recipeId'] === recipeIdVal) {
-                ret = arrayVal[index];
-                return false;
-            }
-        });
-        return ret;
-    }
+/**
+ * DOC療法画面の初期化
+ * @param {type} docRecipe DOC用ドセタキセルのレシピ
+ * @returns {undefined}
+ */
+function reloadDoc(docRecipe) {
+    viewModel.docDosageLnk(docRecipe['dosage_str']);
 }
+
+function updateLsRecipeData(lsRecipeDataVal, recipeIdVal) {
+
+    console.log("◆function getRecipeData◆");
+
+    var param = {recipe_id: recipeIdVal, recipe_data: JSON.stringify(lsRecipeDataVal)};
+
+    console.log("★recipe_id：" + recipeIdVal);
+
+    $.ajax({
+        url: 'rest/recipeData/select.json',
+        type: 'POST',
+        data: param,
+        dataType: "json"
+    }).done(function (result) {
+        console.log("★result：" + result);
+        // TODO:ここで再設定？
+        updateRecipeForLocalStorage(recipeIdVal, result);
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        $("#XMLHttpRequest").html("XMLHttpRequest : " + jqXHR.status);
+        $("#textStatus").html("textStatus : " + textStatus);
+        $("#errorThrown").html("errorThrown : " + errorThrown);
+    }).always(function () {
+    });
+}
+
+
+
+
 
 /**
  * 体表面積を計算
@@ -61,7 +108,8 @@ function calcBsa(sVal, wVal) {
     var calcVal = Math.pow(wVal, 0.425) *
             Math.pow(sVal, 0.725) *
             0.007184;
-    return ret = Math.ceil(calcVal * 1000) / 1000; // 小数第三位で切り捨て
+
+    return calcVal.toFixed(3); // 小数第三位で切り捨て
 }
 
 /**
@@ -75,24 +123,25 @@ function changeRegimen(linkObj) {
     $(".navbar-side-menu li a").removeClass("now");
     $(linkObj).addClass("now");
 
-    // ボタンのid(btn_XXX)を取得
+    // ボタンのid(btn_Menu_XXX)を取得
     var btnId = $(linkObj).attr("id");
 
-    // ボタンのidの最後の"_"以降から対象画面名(XXX)を取得
-    var targetName =
+    // ボタンのidの最後の"_"以降から対象画面の療法Id(XXX)を取得
+    var regimenId =
             btnId ?
             btnId.substring(btnId.lastIndexOf('_') + 1, btnId.length)
             : "other"; // idはbtn_XXXの形式に統一するが一応
 
-    // hiddenに格納　// TODO:つかってない
-    $('#nowRegimen').val(targetName);
+    // hiddenに格納　// TODO:今のところつかってない
+    $('#nowRegimen').val(regimenId);
 
-    // 対象画面のdiv(XXX_content_div)に表示を切り替える    
+    // 対象画面のdiv(regimen_XXX_content_div)に表示を切り替える    
     $('div[id$="_content_div"]').hide(); // idの後方一致ですべて非表示にする
-    $('#' + targetName + '_content_div').show(); // 指定idのdivのみ表示
 
-    // モック時のみ
-    if (targetName + '_content_div' === 'other_content_div') {
+    if ($('#regimen_' + regimenId + '_content_div').length) {
+        $('#regimen_' + regimenId + '_content_div').show(); // 指定idのdivのみ表示
+    } else {
+        // 要素が無い場合はデフォルト表示(モック時のみ)
         $('#default_content_div').show();
     }
 }
@@ -127,34 +176,50 @@ $(document).on('click', '#btnPrintBase', function () {
 });
 
 /**
- * 薬剤容量編集モーダル表示
+ * レシピ編集モーダル表示
  * @param {type} linkObj リンクボタン
  * @returns {undefined}
  */
-function recipeDosageEditModalShow(linkObj) {
+function recipeEditModalShow(linkObj) {
 
-console.log("◆function recipeDosageEditModalShow◆");
+    console.log("▼▼▼ function recipeEditModalShow");
 
-    // リンクのid(lnk_XXX)を取得
-    var lnkId = $(linkObj).attr("id");
-    var param = {lnk_id: lnkId};
-    
-    console.log("★lnkId：" + lnkId);
+    // リンクのid(lnk_Recipe_XX)を取得
+    var lnkId = linkObj.id;
+
+    // リンクのidの最後の"_"以降から対象レシピId(XX)を取得
+    var recipeId =
+            lnkId ?
+            lnkId.substring(lnkId.lastIndexOf('_') + 1, lnkId.length)
+            : "0"; // idはlnk_Recipe_XXの形式に統一するが一応
+
+    console.log("★recipeId：" + recipeId);
+
+    // ローカルストレージに保存済のレシピ情報配列を取得
+    var recipeArray = JSON.parse(localStorage.getItem(LS_KEY_RECIPE_DATA));
+    // レシピIdに一致するレシピ情報を取得
+    var recipeData = getRecipeDataFromArrayById(recipeArray, recipeId);
+
+    // レシピ編集モーダルの表示引数に設定
+    var param = {recipe_data: recipeData};
 
     $.ajax({
-        url: 'rest/recipeDosageEdit/init.json',
-        type: 'GET',
+        url: 'rest/recipeEdit/init.json',
+        type: 'POST',
         data: param
     }).done(function (result) {
-        $('#recipeDosageEdit-modal').find('#modal-label').html(result['title']);
-        $('#recipeDosageEdit-modal').find('#modal-body').html(result['content']);
-        $('#recipeDosageEdit-modal').modal('show');
+        $('#recipeEdit-modal').find('#modal-label').html(result['title']);
+        $('#recipeEdit-modal').find('#modal-body').html(result['content']);
+        $('#recipeEdit-modal').modal('show');
     }).fail(function (jqXHR, textStatus, errorThrown) {
+        console.log("×fail(status)：" + textStatus);
         $("#XMLHttpRequest").html("XMLHttpRequest : " + jqXHR.status);
         $("#textStatus").html("textStatus : " + textStatus);
         $("#errorThrown").html("errorThrown : " + errorThrown);
     }).always(function () {
     });
+
+    console.log("▲▲▲  function recipeEditModalShow");
 }
 
 

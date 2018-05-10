@@ -19,10 +19,10 @@ function settingViewModel() {
         changeRegimen(event.target);
     };
 
-    /* 薬剤容量リンクのクリックイベント */
-    this.clickRecipeDosageLink = function (data, event) {
-        recipeDosageEditModalShow(event.target);
-    };
+//    /* 薬剤容量リンクのクリックイベント */
+//    this.clickRecipeDosageLink = function (data, event) {
+//        recipeDosageEditModalShow(event.target);
+//    };
 
     /* ★☆★ 療法別画面 ★☆★ */
 
@@ -60,6 +60,6 @@ function calcDosageVal(bsaVal, dosageVal) {
         // 空白か数値以外の場合はクリア
         return "";
     }
-    var ret = bsaVal * dosageVal; //TODO:丸め
-    return ret;
+    var ret = bsaVal * dosageVal;
+    return ret.toFixed(1); // 小数第一位に丸める
 }

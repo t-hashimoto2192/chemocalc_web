@@ -14,7 +14,8 @@
                 <tr>
                     <td class="col1">
                         {#{{html_anchor("JavaScript:void(0);", "5-FU(" ~ recipe_5fu.dosage_str ~ "mg/㎡)：", {'class' : 'lnkBtn', 'id' : 'lnk_Fec5fu', 'data-bind' : 'click: clickRecipeDosageLink'}) }} #}
-                        <a class="lnkBtn" id="lnk_Fec5fu" data-bind="click: clickRecipeDosageLink" href="JavaScript:void(0);"><span>5-FU({{recipe_5fu.dosage_str}}/㎡)：</span></a>
+                        {#<a class="lnkBtn" id="lnk_Fec5fu" data-bind="click: clickRecipeDosageLink" href="JavaScript:void(0);"><span>5-FU({{recipe_5fu.dosage_str}}/㎡)：</span></a>#}
+                        <a class="lnkBtn" id="lnk_Fec5fu" onclick="recipeEditModalShow(this);" href="JavaScript:void(0);"><span>5-FU({{recipe_5fu.dosage_str}}/㎡)：</span></a>
                     </td>
                     <td class="col2">
                         <span id ="Fec5fu_value">{{recipe_5fu.dosage_value}}</span>                   
@@ -32,7 +33,8 @@
                 <tr>
                     <td class="col1">
                         {#{{html_anchor("JavaScript:void(0);", "CPA(" ~ recipe_cpa.dosage_str ~ "mg/㎡)：", {'class' : 'lnkBtn', 'id' : 'lnk_FecCpa', 'data-bind' : 'click: clickRecipeDosageLink'}) }}  #}
-                        <a class="lnkBtn" id="lnk_FecCpa" data-bind="click: clickRecipeDosageLink" href="JavaScript:void(0);"><span>5-FU({{recipe_cpa.dosage_str}}/㎡)：</span></a>
+                        {#<a class="lnkBtn" id="lnk_FecCpa" data-bind="click: clickRecipeDosageLink" href="JavaScript:void(0);"><span>5-FU({{recipe_cpa.dosage_str}}/㎡)：</span></a>#}
+                        <a class="lnkBtn" id="lnk_FecCpa" onclick="recipeEditModalShow(this);" href="JavaScript:void(0);"><span>5-FU({{recipe_cpa.dosage_str}}/㎡)：</span></a>
                     </td>
                     <td class="col2">
                         <span data-bind="text: fec_cpa_ref"></span>                   

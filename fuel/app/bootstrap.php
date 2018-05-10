@@ -34,5 +34,8 @@ require COREPATH . 'bootstrap.php';
 // Initialize the framework with the config file.
 \Fuel::init('config.php');
 
-// 定数用の PHP ファイルをロードする
+// 定数用のPHPファイルをロードする
 require APPPATH . 'classes/constant.php';
+
+// 共通関数PHPファイルをロードする
+require APPPATH . 'classes/util.php';
