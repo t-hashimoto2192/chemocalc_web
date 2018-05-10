@@ -96,7 +96,12 @@
     </div> 
     <div class="row">
         <table class="table table-bordered table-condensed table-hover table-striped tblMedinaList" id="tblMedinaDoc">
-            <tr>
+            <tbody data-bind="foreach: docStandardArray">
+                <tr>
+                    <td data-bind="text: name"></td>
+                </tr>
+            </tbody>
+{#            <tr>
                 <td>
                     １，０００ｍｇ１瓶
                 </td>
@@ -109,7 +114,7 @@
             </tr>
             <tr>
                 <td class="active">　</td>
-            </tr>
+            </tr>#}
         </table>
     </div> 
 {% endblock regimenMedina %}

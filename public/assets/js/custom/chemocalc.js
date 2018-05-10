@@ -44,7 +44,7 @@ window.onload = function () {
  * 各治療費計算シート領域の初期化
  * @returns {undefined}
  */
-function initializeContentDiv(){
+function initializeContentDiv() {
     // ローカルストレージに保存済のレシピ情報配列を取得
     var recipeArray = JSON.parse(localStorage.getItem(LS_KEY_RECIPE_DATA));
     console.log("★ ③localStorageより取得");
@@ -52,7 +52,7 @@ function initializeContentDiv(){
     // 各治療費計算シート画面のデータ参照個所を設定
 
     // -- DOC療法
-    reloadDoc(getRecipeDataFromArrayById(recipeArray, '25'));    
+    reloadDoc(getRecipeDataFromArrayById(recipeArray, '25'));
 }
 
 /**
@@ -61,7 +61,15 @@ function initializeContentDiv(){
  * @returns {undefined}
  */
 function reloadDoc(docRecipe) {
+    console.log("▼▼▼ function reloadDoc");
+    // 容量
     viewModel.docDosageLnk(docRecipe['dosage_str']);
+    // 薬剤の規格
+    var medinas = docRecipe.commonname_per_recipe.commonname.commonname_per_medinas;
+    Object.keys(medinas).forEach(function (key) {
+        viewModel.docStandardArray.push(medinas[key].medina);
+    });
+    console.log("▲▲▲ function reloadDoc");
 }
 
 function updateLsRecipeData(lsRecipeDataVal, recipeIdVal) {
