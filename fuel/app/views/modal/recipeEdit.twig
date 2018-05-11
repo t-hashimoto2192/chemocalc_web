@@ -21,6 +21,26 @@
 <div class="row">
     <div class="col-md-12">
         <h5 style="text-align: left;text-decoration: underline">使用薬剤変更</h5>
+        <table id="recipeEditTable" class="table table-bordered table-striped table-responsive table-condensed table-hover recipe_edit">
+            <thead>
+                <tr>
+                    <th class="col1">使用</th>
+                    <th class="col2">薬剤名</th>
+                    <th class="col3">メーカー</th>
+                    <th class="col4">価格</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for medinaData in medinas %}
+                    <tr>
+                        <td class="col1"></td>
+                        <td class="col2">{{medinaData.name}}</td>
+                        <td class="col3">{{medinaData.company}}</td>
+                        <td class="col4">{{medinaData.price}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>  
     </div>
 </div>
-                
+

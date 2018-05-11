@@ -1,6 +1,6 @@
 
 <row>
-    <h3 class="content_title" style="text-align: center;font-weight: bold;">※この価格は概算です。</h3>
+    <h4 class="content_title" style="text-align: center;font-weight: bold;">※この価格は概算です。</h4>
 </row>
 <row>
     <div style="display: table;width: 100%; margin-bottom: 10px;">
@@ -26,26 +26,11 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>FEC</td>
-                <td>83,682 円/回</td>
-                <td>=> 83,682 円/3週</td>
-            </tr>
-            <tr>
-                <td>CDK4/6阻害薬(イブランス)</td>
-                <td></td>
-                <td>=> 142,130 円/30日</td>
-            </tr>
-            <tr>
-                <td>ホルモン(内服)</td>
-                <td></td>
-                <td>=> 4,553 円/30日</td>
-            </tr>
-            {% for user in users %}
+            {% for priceData in priceDataArray %}
                 <tr>
-                    <td>{{user.id }}</td>
-                    <td>{{user.name }}</td>
-                    <td>{{user.tel }}</td>
+                    <td>{{priceData.regimenName}}</td>
+                    <td>{{priceData.oncePrice}}</td>
+                    <td>{{priceData.oneCoursePrice}}</td>
                 </tr>
             {% endfor %}
         </tbody>

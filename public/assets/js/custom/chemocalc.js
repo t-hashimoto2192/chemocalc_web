@@ -81,34 +81,30 @@ function reloadDoc(docRecipe) {
     console.log("▲▲▲ function reloadDoc");
 }
 
-function updateLsRecipeData(lsRecipeDataVal, recipeIdVal) {
-
-    console.log("◆function getRecipeData◆");
-
-    var param = {recipe_id: recipeIdVal, recipe_data: JSON.stringify(lsRecipeDataVal)};
-
-    console.log("★recipe_id：" + recipeIdVal);
-
-    $.ajax({
-        url: 'rest/recipeData/select.json',
-        type: 'POST',
-        data: param,
-        dataType: "json"
-    }).done(function (result) {
-        console.log("★result：" + result);
-        // TODO:ここで再設定？
-        updateRecipeForLocalStorage(recipeIdVal, result);
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-        $("#XMLHttpRequest").html("XMLHttpRequest : " + jqXHR.status);
-        $("#textStatus").html("textStatus : " + textStatus);
-        $("#errorThrown").html("errorThrown : " + errorThrown);
-    }).always(function () {
-    });
-}
-
-
-
-
+//function updateLsRecipeData(lsRecipeDataVal, recipeIdVal) {
+//
+//    console.log("◆function getRecipeData◆");
+//
+//    var param = {recipe_id: recipeIdVal, recipe_data: JSON.stringify(lsRecipeDataVal)};
+//
+//    console.log("★recipe_id：" + recipeIdVal);
+//
+//    $.ajax({
+//        url: 'rest/recipeData/select.json',
+//        type: 'POST',
+//        data: param,
+//        dataType: "json"
+//    }).done(function (result) {
+//        console.log("★result：" + result);
+//        // TODO:ここで再設定？
+//        updateRecipeForLocalStorage(recipeIdVal, result);
+//    }).fail(function (jqXHR, textStatus, errorThrown) {
+//        $("#XMLHttpRequest").html("XMLHttpRequest : " + jqXHR.status);
+//        $("#textStatus").html("textStatus : " + textStatus);
+//        $("#errorThrown").html("errorThrown : " + errorThrown);
+//    }).always(function () {
+//    });
+//}
 
 /**
  * 体表面積を計算
@@ -167,9 +163,14 @@ function changeRegimen(linkObj) {
  * 比較ボタンクリックイベント
  */
 $(document).on('click', '#btnDiff', function () {
-    // モーダル表示時は3割負担固定
-    var param = {discount_per: 3};
-    $.ajax({type: 'GET',
+
+    var koJsonData = ko.toJSON(viewModel);
+    var param = {
+        discount_per: 3, // モーダル表示時は3割負担固定
+        ko_json_data: koJsonData
+    };
+
+    $.ajax({type: 'POST',
         url: 'rest/diff/list.json',
         data: param,
         success: function (result) {
@@ -187,7 +188,9 @@ $(document).on('click', '#btnDiff', function () {
                 // 情報表示 無効
                 info: false,
                 // ページング機能 無効
-                paging: false
+                paging: false,
+                // 初期表示時には並び替えをしない
+                order: []
             });
             // テーブル行のスタイル設定
             $('#diff-modal').find('#diffTable').addClass("burden30Per");
@@ -241,6 +244,25 @@ function recipeEditModalShow(linkObj) {
         $('#recipeEdit-modal').find('#modal-label').html(result['title']);
         $('#recipeEdit-modal').find('#modal-body').html(result['content']);
         $('#recipeEdit-modal').modal('show');
+        // DataTables適用
+        $('#recipeEdit-modal').find("#recipeEditTable").DataTable({
+            // 件数切替機能 無効
+            lengthChange: false,
+            // 検索機能 無効
+            searching: false,
+            // ソート機能 有効
+            ordering: true,
+            // 情報表示 無効
+            info: false,
+            // ページング機能 無効
+            paging: false,
+            // 初期表示時には並び替えをしない
+            order: [],
+            // スクロール設定
+            scrollY: "300px",
+            scrollCollapse: true,
+        }).columns.adjust().draw();
+
     }).fail(function (jqXHR, textStatus, errorThrown) {
         console.log("×fail(status)：" + textStatus);
         $("#XMLHttpRequest").html("XMLHttpRequest : " + jqXHR.status);
@@ -252,6 +274,62 @@ function recipeEditModalShow(linkObj) {
     console.log("▲▲▲  function recipeEditModalShow");
 }
 
+/**
+ * 数値を金額表記フォーマットに変換
+ * @param {type} baseValue 元の値
+ * @returns {String} カンマ区切りの値
+ */
+function formatPriceValue(baseValue) {
+    var ret = "";
+    if (!baseValue || isNaN(baseValue)) {
+        return "";
+    }
+    ret = String(baseValue).replace(/([0-9]{1,3})(?=(?:[0-9]{3})+$)/g, '$1,');
+    return ret;
+}
 
+/**
+ * 金額表記フォーマットを数値に戻す
+ * @param {type} formatedValue 元の値
+ * @returns {String} カンマ区切りの値
+ */
+function unformatPriceValue(formatedValue) {
+    var ret = "";
+    if (formatedValue) {
+        ret = formatedValue.replace(/,/g, '');
+    }
+    return ret;
+}
+
+/**
+ * 参考使用量産出
+ * @param {type} bsaVal 体表面積
+ * @param {type} dosageVal 投薬量
+ * @returns {Number|String} 参考使用量(引数が不正な場合は空白を返す。計算結果は小数第一位に丸める)
+ */
+function calcDosageVal(bsaVal, dosageVal) {
+    // 参考使用量
+    if (!bsaVal || isNaN(bsaVal) || !dosageVal || isNaN(dosageVal)) {
+        // 空白か数値以外の場合はクリア
+        return "";
+    }
+    var ret = bsaVal * dosageVal;
+    return ret.toFixed(1); // 小数第一位に丸める
+}
+
+/**
+ * 薬価自己負担額計算
+ * @param {type} totalPriceVal 合計薬価
+ * @param {type} burdenPerVal 負担割合(0.X)
+ * @returns {Number|String} 負担割合に応じた負担額　
+ */
+function CalcBurdenPrice(totalPriceVal, burdenPerVal) {
+    var ret = '';
+    if (!totalPriceVal || isNaN(totalPriceVal)) {
+        return ret;
+    }
+    ret = Math.round(totalPriceVal * burdenPerVal);
+    return ret;
+}
 
 

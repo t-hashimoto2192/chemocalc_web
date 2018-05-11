@@ -14,7 +14,7 @@ class Controller_Rest_RecipeEdit extends Controller_Rest
         // レシピ編集画面引数
         $data = array();
 
-        // ローカルストレージに格納していたjson形式レシピ情報
+        // ローカルストレージに格納していたレシピ情報配列
         $ls_recipe_data = Input::post('recipe_data');
 
         // タイトル
@@ -23,10 +23,26 @@ class Controller_Rest_RecipeEdit extends Controller_Rest
         $data['data_recipe'] = $ls_recipe_data;
 
         // 現在の容量
-        $data['base_dosage_label'] = $data['data_recipe']['dosage_str'] . 'mg/㎡';
+        $data['base_dosage_label'] = $ls_recipe_data['dosage_str'] . 'mg/㎡';
 
         // 初期値
-        $data['default_dosage_label'] = $data['data_recipe']['default_dosage_str'] . 'mg/㎡';
+        $data['default_dosage_label'] = $ls_recipe_data['default_dosage_str'] . 'mg/㎡';
+
+        // 使用薬剤一般名のId
+        $commonname_id = $ls_recipe_data['commonname_per_recipe']['commonname_id'];
+        // 使用薬剤リストをDBから取得
+        $medina_data = Model_Commonname::find($commonname_id, array(
+                    'related' => array('medinas')
+                        )
+        );
+
+        $data['medinas'] = $medina_data['medinas'];
+
+        // 使用中の薬剤
+        // TODO：これを利用して薬剤一覧にチェックを入れる
+        $use_medina_data = $ls_recipe_data['commonname_per_recipe']['commonname']['commonname_per_medinas'];
+
+        $data['use_medina_data'] = $use_medina_data;
 
         return $this->response(array(
                     'title' => $recipe_title,

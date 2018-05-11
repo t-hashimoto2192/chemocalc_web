@@ -20,6 +20,11 @@ class Model_Commonname extends \Orm\Model
             'key_from' => 'id',
             'key_to' => 'commonname_id',
         ),
+        'medinas' => array(
+            'model_to' => 'Model_Medina',
+            'key_from' => 'id',
+            'key_to' => 'commonname_id',
+        ),
     );
 
 }

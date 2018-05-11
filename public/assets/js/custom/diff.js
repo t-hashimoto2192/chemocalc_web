@@ -1,3 +1,5 @@
+/* global viewModel */
+
 var rowClass = '';
 
 /**
@@ -18,11 +20,14 @@ $(document).on('click', 'button[id^="btnDiscont_"]', function () {
     } else if (discount_per === "1") {
         rowClass = 'burden10Per';
     }
-    
-    // TODO: ajaxする必要なし？
 
-    var param = {discount_per: discount_per};
-    $.ajax({type: 'GET',
+    var koJsonData = ko.toJSON(viewModel);
+    var param = {
+        discount_per: discount_per, 
+        ko_json_data: koJsonData
+    };
+
+    $.ajax({type: 'POST',
         url: 'rest/diff/list.json',
         data: param,
         success: function (result) {
@@ -39,7 +44,9 @@ $(document).on('click', 'button[id^="btnDiscont_"]', function () {
                 // 情報表示 無効
                 info: false,
                 // ページング機能 無効
-                paging: false
+                paging: false,
+                // 初期表示時には並び替えをしない
+                order: []
             });
             // テーブル行のスタイル設定
             $('#diff-modal').find('#diffTable').addClass(rowClass);

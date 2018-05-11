@@ -4,23 +4,23 @@
 
 /*容量変更領域テーブル設定*/
 table.dosage_edit {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 table.dosage_edit > tbody > tr > th {
-  padding: 3px 3px;
+    padding: 3px 3px;
 }
 table.dosage_edit > tbody > tr > td {
-  padding: 5px 5px;
+    padding: 5px 5px;
 }
 table.dosage_edit > tbody > tr > th.col1,th.col2, th.col3 {
-  width: 150px;
-  text-align: center;
+    width: 150px;
+    text-align: center;
 }
 table.dosage_edit > tbody > tr > td.col1, td.col3 {
-  text-align: right;
+    text-align: right;
 }
 table.dosage_edit > tbody > tr > td.col2 {
-  text-align: center;
+    text-align: center;
 }
 /*table.dosage > tbody > tr > th.col2, td.col3, td.col5{
   width: 70px;
@@ -30,3 +30,45 @@ table.dosage > tbody > tr > td.col4{
   width: 80px;
   text-align: right;
 }*/
+
+/*使用薬剤変更テーブル設定*/
+#recipeEditTable.table {
+    margin-bottom: 20px;
+}
+table.recipe_edit .table tr{
+    font-size: small;
+}
+table.recipe_edit .table > thead > tr > th {
+    text-align: left;
+}
+/*#recipeEditTable > tbody > tr > td {
+    padding: 5px 5px;
+}*/
+table.recipe_edit .table > thead > tr > th.col1,
+table.recipe_edit .table > tbody > tr > td.col1 {
+    width: 10%;
+}
+table.recipe_edit .table > thead > tr > th.col2,
+table.recipe_edit .table > tbody > tr > td.col2 {
+    width: 55%;
+}
+table.recipe_edit .table> thead > tr > th.col3,
+table.recipe_edit .table > tbody > tr > td.col3 {
+    width: 25%;
+}
+table.recipe_edit .table > thead > tr > th.col4 {
+    width: 15%;
+}
+table.recipe_edit .table > tbody > tr > td.col1 {
+    text-align: center;
+}
+table.recipe_edit .table > tbody > tr > td.col2 {
+    text-align: left;
+}
+table.recipe_edit .table > tbody > tr > td.col3 {
+    text-align: left;
+}
+table.recipe_edit .table > tbody > tr > td.col4 {
+    width: 15%;
+    text-align: right;
+}

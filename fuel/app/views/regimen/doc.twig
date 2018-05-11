@@ -97,26 +97,12 @@
         <span style="font-weight: bold;font-size: medium;">DOC：</span>
     </div> 
     <div class="row">
-        <table class="table table-bordered table-condensed table-hover table-striped tblMedinaList" id="tblStandardDoc">
+        <table class="table table-bordered table-condensed table-hover table-striped tblStandardList" id="tblStandardDoc">
             <tbody data-bind="foreach: docStandardArray">
-                <tr>
+                <tr data-bind="css: { dataExist:  id > 0 }">
                     <td data-bind="text: quantity_text"></td>
                 </tr>
             </tbody>
-            {#            <tr>
-                            <td>
-                                １，０００ｍｇ１瓶
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="active">　</td>
-                        </tr>
-                        <tr>
-                            <td>　</td>
-                        </tr>
-                        <tr>
-                            <td class="active">　</td>
-                        </tr>#}
         </table>
     </div> 
 {% endblock regimenMedina %}
