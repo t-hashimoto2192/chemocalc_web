@@ -21,10 +21,12 @@
                     <td class="col3">
                         mg/body                   
                     </td>
-                    <td class="col4">
-                        <input type="text" class="form-control" size="8"  data-bind="value: docDosageTxt"/>    
+                    <td class="col4">               
                     </td>
                     <td class="col5">
+                        <input type="text" class="form-control" size="8"  data-bind='value: docValueTxt, valueUpdate: "afterkeydown"'/>    
+                    </td>
+                    <td class="col6">
                         mg/body                   
                     </td>
                 </tr>
@@ -95,26 +97,26 @@
         <span style="font-weight: bold;font-size: medium;">DOC：</span>
     </div> 
     <div class="row">
-        <table class="table table-bordered table-condensed table-hover table-striped tblMedinaList" id="tblMedinaDoc">
+        <table class="table table-bordered table-condensed table-hover table-striped tblMedinaList" id="tblStandardDoc">
             <tbody data-bind="foreach: docStandardArray">
                 <tr>
-                    <td data-bind="text: name"></td>
+                    <td data-bind="text: quantity_text"></td>
                 </tr>
             </tbody>
-{#            <tr>
-                <td>
-                    １，０００ｍｇ１瓶
-                </td>
-            </tr>
-            <tr>
-                <td class="active">　</td>
-            </tr>
-            <tr>
-                <td>　</td>
-            </tr>
-            <tr>
-                <td class="active">　</td>
-            </tr>#}
+            {#            <tr>
+                            <td>
+                                １，０００ｍｇ１瓶
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="active">　</td>
+                        </tr>
+                        <tr>
+                            <td>　</td>
+                        </tr>
+                        <tr>
+                            <td class="active">　</td>
+                        </tr>#}
         </table>
     </div> 
 {% endblock regimenMedina %}

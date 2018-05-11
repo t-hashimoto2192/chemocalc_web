@@ -1,3 +1,5 @@
+var rowClass = '';
+
 /**
  * 比較画面X割負担ボタンクリックイベント
  * 割引率を変更して再計算後body部のみ書き換える
@@ -10,12 +12,14 @@ $(document).on('click', 'button[id^="btnDiscont_"]', function () {
     // ボタンのidの最後の"_"以降から負担割合(XXX)を取得
     var discount_per = btnId.substring(btnId.lastIndexOf('_') + 1, btnId.length);
     // テーブル行のスタイル
-    var rowClass = 'info';
-    if (discount_per == 2) {
-        rowClass = 'warning';
-    } else if (discount_per == 1) {
-        rowClass = 'danger';
+    rowClass = 'burden30Per';
+    if (discount_per === "2") {
+        rowClass = 'burden20Per';
+    } else if (discount_per === "1") {
+        rowClass = 'burden10Per';
     }
+    
+    // TODO: ajaxする必要なし？
 
     var param = {discount_per: discount_per};
     $.ajax({type: 'GET',
@@ -24,8 +28,21 @@ $(document).on('click', 'button[id^="btnDiscont_"]', function () {
         success: function (result) {
             // 既に開いているbody部のみ書き換え
             $('#diff-modal').find('#modal-body').html(result['content']);
+            // DataTables適用
+            $('#diff-modal').find("#diffTable").DataTable({
+                // 件数切替機能 無効
+                lengthChange: false,
+                // 検索機能 無効
+                searching: false,
+                // ソート機能 有効
+                ordering: true,
+                // 情報表示 無効
+                info: false,
+                // ページング機能 無効
+                paging: false
+            });
             // テーブル行のスタイル設定
-            $('#diff-modal').find('#diffTable').find("tbody > tr:even").addClass(rowClass);
+            $('#diff-modal').find('#diffTable').addClass(rowClass);
         },
         error: function (result) {
             alert('error:' + result.status + '(' + result.statusText + ')');

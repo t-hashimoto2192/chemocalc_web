@@ -65,10 +65,19 @@ function reloadDoc(docRecipe) {
     // 容量
     viewModel.docDosageLnk(docRecipe['dosage_str']);
     // 薬剤の規格
+    viewModel.docStandardArray.removeAll();
     var medinas = docRecipe.commonname_per_recipe.commonname.commonname_per_medinas;
+    var addLength = 4 - Object.keys(medinas).length; // 薬剤数が表示最低行数以下の場合に空行を追加する件数
     Object.keys(medinas).forEach(function (key) {
         viewModel.docStandardArray.push(medinas[key].medina);
     });
+
+    if (addLength > 0) {
+        for (var i = 0; i < addLength; i++) {
+            // 空行を追加
+            viewModel.docStandardArray.push({quantity_text: "　", id: "0", name: "ダミー"});
+        }
+    }
     console.log("▲▲▲ function reloadDoc");
 }
 
@@ -167,8 +176,21 @@ $(document).on('click', '#btnDiff', function () {
             $('#diff-modal').find('#modal-label').html(result['title']);
             $('#diff-modal').find('#modal-body').html(result['content']);
             $('#diff-modal').modal('show');
+            // DataTables適用
+            $('#diff-modal').find("#diffTable").DataTable({
+                // 件数切替機能 無効
+                lengthChange: false,
+                // 検索機能 無効
+                searching: false,
+                // ソート機能 有効
+                ordering: true,
+                // 情報表示 無効
+                info: false,
+                // ページング機能 無効
+                paging: false
+            });
             // テーブル行のスタイル設定
-            $('#diff-modal').find('#diffTable').find("tbody > tr:even").addClass("info");
+            $('#diff-modal').find('#diffTable').addClass("burden30Per");
         },
         error: function (result) {
             alert('error:' + result.status + '(' + result.statusText + ')');

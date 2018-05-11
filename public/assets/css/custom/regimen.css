@@ -13,11 +13,14 @@ table.dosage > tbody > tr > td.col1 {
   width: 200px;
   text-align: right;
 }
-table.dosage > tbody > tr > td.col2, td.col3, td.col5{
+table.dosage > tbody > tr > td.col2, td.col3, td.col6{
   width: 70px;
   text-align: center;
 }
 table.dosage > tbody > tr > td.col4{
+  width: 20px;
+}
+table.dosage > tbody > tr > td.col5{
   width: 80px;
   text-align: right;
 }
