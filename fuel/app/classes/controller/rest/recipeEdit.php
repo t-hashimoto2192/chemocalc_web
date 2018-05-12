@@ -48,6 +48,7 @@ class Controller_Rest_RecipeEdit extends Controller_Rest
         return $this->response(array(
                     'title' => $recipe_title,
                     'useMedinaIdarray' => $use_medina_data_array,
+					'medinasArray' => $medina_data['medinas'], // 使用薬剤変更用にセッションストレージに格納する
                     'content' => View_Twig::forge('modal/recipeEdit', $data)->render()
         ));
     }

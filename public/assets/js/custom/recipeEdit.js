@@ -1,4 +1,4 @@
-/* global viewModel, LS_KEY_RECIPE_DATA, rows_selected */
+/* global viewModel, LS_KEY_RECIPE_DATA, rows_selected, SS_KEY_MEDINAS_DATA */
 
 /*
  * 使用薬剤選択テーブルの全選択/全解除
@@ -61,11 +61,13 @@ $(document).on('hidden.bs.modal', '#recipeEdit-modal', function () {
  */
 function execRecipeChange() {
     console.log("▼▼▼ function execRecipeChange");
+    
     // レシピID
     var recipeIdVal = $('#hdnRecipeId').val();
-
     // 設定後の容量
     var inputDosageVal = $('#txtInputDosage').val();
+
+    // -- 薬剤容量の変更の反映 --
 
     // ローカルストレージに保存済のレシピ情報配列を取得
     var recipeArray = JSON.parse(localStorage.getItem(LS_KEY_RECIPE_DATA));
@@ -74,29 +76,34 @@ function execRecipeChange() {
 
     // レシピ情報の容量の値を更新
     recipeData['dosage_str'] = inputDosageVal;
-
+    
+     // -- 使用薬剤の変更の反映 --
+     
+     // ローカルストレージに保存済のレシピ情報配列を取得
+    var medinasArray = JSON.parse(sessionStorage.getItem(SS_KEY_MEDINAS_DATA));
+    
     // テーブルのチェック行からcommonname_per_medinasのデータを再作成する
-    var dt = $('#recipeEditTable').DataTable();
-    dt.rows().every(function () {
-        var d = this.data();
-
-        // 使用薬剤テーブルのチェック状態を取得
-        $.each(rows_selected, function (index, medinaId) {
-            if (d[0] == medinaId){
-                // 選択行
-                console.log('選択薬剤：' + d);
-                // TODO:commonname_per_medinaを再現するにはIdも必要なので隠し列に持たせる？
-            }
-        });
+    $newCommonNamePerMedinas = new Array();
+    $.each(rows_selected, function (index, medinaId) {
+        // 薬剤Idに一致する薬剤情報を取得
+        var medinaData = getMedinaDataFromArrayById(medinasArray, medinaId);
+        // commonname_per_medinaを復元(Idは単なるPKで不使用なので特に再設定しない)
+        var $newCommonNamePerMedina = {
+            id: '', 
+            medina_id: medinaData['id'], 
+            commonname_id: medinaData['commonname_id'],
+            medina: medinaData
+        };
+        $newCommonNamePerMedinas.push($newCommonNamePerMedina);
     });
     
-    
-    
+    // commonname_per_medinasのデータを再設定する
+    recipeData['commonname_per_recipe']['commonname']['commonname_per_medinas'] = $newCommonNamePerMedinas;
 
     // レシピ情報の変更をローカルストレージに反映
     updateLsRecipeDataArray(recipeIdVal, recipeData);
-
-    // TODO:再計算(容量だけなら参考使用量のみ、薬剤変更実装後は全部)
+    
+    // TODO:同一薬剤を使用する療法が複数あるケースもあり
     switch (recipeIdVal) {
         case "25":
             reloadDoc(recipeData);

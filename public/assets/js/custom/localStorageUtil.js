@@ -88,3 +88,24 @@ function getRecipeDataFromArrayById(arrayVal, recipeIdVal) {
         return ret;
     }
 }
+
+/**
+ * 薬剤データ配列からid指定で薬剤データを取得
+ * @param {type} arrayVal
+ * @param {type} medinaIdVal 薬剤ID
+ * @returns {getMedinaDataFromArrayById.arrayVal|Boolean} レシピデータ(無ければfalse)
+ */
+function getMedinaDataFromArrayById(arrayVal, medinaIdVal) {
+    var ret;
+    if (!arrayVal) {
+        return false;
+    } else {
+        jQuery.each(arrayVal, function (index, value) {
+            if (value['id'] === medinaIdVal) {
+                ret = arrayVal[index];
+                return false;
+            }
+        });
+        return ret;
+    }
+}

@@ -9,6 +9,12 @@
  */
 const LS_KEY_RECIPE_DATA = 'recipe_data_array_2018';
 
+/**
+ * 薬剤編集モーダル表示時に使用する薬剤データのセッションストレージ保存キー
+ * @type String
+ */
+const SS_KEY_MEDINAS_DATA = 'medinas_data_array';
+
 // グローバル変数
 
 // knockout.jsのViewModel
@@ -226,6 +232,10 @@ function recipeEditModalShow(lnkId, unitVal) {
         
         // commonname_per_medinaのIdを選択状態に反映
         rows_selected = result['useMedinaIdarray'];
+        
+        // commonname_per_medinaの再作成に使用のためセッションストレージにmednasを格納
+        sessionStorage.removeItem(SS_KEY_MEDINAS_DATA);
+        sessionStorage.setItem(SS_KEY_MEDINAS_DATA, JSON.stringify(result['medinasArray']));
         
         // DataTables適用
         var table = $('#recipeEdit-modal').find("#recipeEditTable").DataTable({
