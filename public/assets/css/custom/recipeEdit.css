@@ -10,22 +10,22 @@
     display:table-row;
 }
 #dosage_edit_tbl .row > div.th {
-        display:table-cell;
+    display:table-cell;
     width: 150px;
     font-weight: bold;
     text-align: center;
 }
 #dosage_edit_tbl .row > div.td {
-        display:table-cell;
+    display:table-cell;
     text-align: right;
     vertical-align: middle;
     padding-right: 15px; 
 }
 #dosage_edit_tbl .row > div.td_input {
-        display:table-cell;
+    display:table-cell;
     text-align: center; 
     vertical-align: middle;
-    
+
 }
 
 /*使用薬剤変更テーブル設定*/
