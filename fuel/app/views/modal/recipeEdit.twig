@@ -2,20 +2,18 @@
 <div class="row">
     <div class="col-md-12">
         <h5 style="text-align: left;text-decoration: underline">容量</h5>
-        <table class="dosage_edit">
-            <tbody>
-                <tr>
-                    <th class="col1">現在の容量</th>
-                    <th class="col2">設定後の容量</th>
-                    <th class="col3">初期値</th>
-                </tr>
-                <tr>
-                    <td class="col1"><span>{{base_dosage_label}}</span></td>
-                    <td class="col2"><input type="text" id="txtInputDosage" class="form-control text-right" size="5" value="{{data_recipe.dosage_str}}"/></td>
-                    <td class="col3"><span>{{default_dosage_label}}</span></td>
-                </tr>
-            </tbody>
-        </table>
+        <div id="dosage_edit_tbl">
+            <div class="row">
+                <div class="th">現在の容量</div> 
+                <div class="th">設定後の容量</div>
+                <div class="th">初期値</div>
+            </div>
+            <div class="row">
+                <div class="td">{{base_dosage_label}}</div> 
+                <div class="td_input"><input type="text" id="txtInputDosage" class="form-control text-right" size="5" value="{{data_recipe.dosage_str}}"/></div>
+                <div class="td">{{default_dosage_label}}</div>
+            </div>
+        </div>
     </div>
 </div>
 <div class="row">

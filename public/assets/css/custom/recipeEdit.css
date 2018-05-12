@@ -2,34 +2,31 @@
 薬剤容量編集画面のスタイル
 */
 
-/*容量変更領域テーブル設定*/
-table.dosage_edit {
-    margin-bottom: 20px;
+/*容量変更領域表組設定 */
+#dosage_edit_tbl {
+    display:table; 
 }
-table.dosage_edit > tbody > tr > th {
-    padding: 3px 3px;
+#dosage_edit_tbl .row {
+    display:table-row;
 }
-table.dosage_edit > tbody > tr > td {
-    padding: 5px 5px;
-}
-table.dosage_edit > tbody > tr > th.col1,th.col2, th.col3 {
+#dosage_edit_tbl .row > div.th {
+        display:table-cell;
     width: 150px;
+    font-weight: bold;
     text-align: center;
 }
-table.dosage_edit > tbody > tr > td.col1, td.col3 {
+#dosage_edit_tbl .row > div.td {
+        display:table-cell;
     text-align: right;
+    vertical-align: middle;
+    padding-right: 15px; 
 }
-table.dosage_edit > tbody > tr > td.col2 {
-    text-align: center;
+#dosage_edit_tbl .row > div.td_input {
+        display:table-cell;
+    text-align: center; 
+    vertical-align: middle;
+    
 }
-/*table.dosage > tbody > tr > th.col2, td.col3, td.col5{
-  width: 70px;
-  text-align: center;
-}
-table.dosage > tbody > tr > td.col4{
-  width: 80px;
-  text-align: right;
-}*/
 
 /*使用薬剤変更テーブル設定*/
 #recipeEditTable.table {
