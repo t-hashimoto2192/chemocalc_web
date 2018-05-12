@@ -14,6 +14,9 @@ const LS_KEY_RECIPE_DATA = 'recipe_data_array_2018';
 // knockout.jsのViewModel
 var viewModel = new settingViewModel();
 
+// 薬剤編集モーダルの選択状態管理
+var rows_selected = [];
+
 /**
  * onload処理
  * @returns {undefined}
@@ -80,31 +83,6 @@ function reloadDoc(docRecipe) {
     }
     console.log("▲▲▲ function reloadDoc");
 }
-
-//function updateLsRecipeData(lsRecipeDataVal, recipeIdVal) {
-//
-//    console.log("◆function getRecipeData◆");
-//
-//    var param = {recipe_id: recipeIdVal, recipe_data: JSON.stringify(lsRecipeDataVal)};
-//
-//    console.log("★recipe_id：" + recipeIdVal);
-//
-//    $.ajax({
-//        url: 'rest/recipeData/select.json',
-//        type: 'POST',
-//        data: param,
-//        dataType: "json"
-//    }).done(function (result) {
-//        console.log("★result：" + result);
-//        // TODO:ここで再設定？
-//        updateRecipeForLocalStorage(recipeIdVal, result);
-//    }).fail(function (jqXHR, textStatus, errorThrown) {
-//        $("#XMLHttpRequest").html("XMLHttpRequest : " + jqXHR.status);
-//        $("#textStatus").html("textStatus : " + textStatus);
-//        $("#errorThrown").html("errorThrown : " + errorThrown);
-//    }).always(function () {
-//    });
-//}
 
 /**
  * 体表面積を計算
@@ -211,14 +189,15 @@ $(document).on('click', '#btnPrintBase', function () {
 /**
  * レシピ編集モーダル表示
  * @param {type} linkObj リンクボタン
+ * @param {type} unitVal 薬剤の単位文字列 
  * @returns {undefined}
  */
-function recipeEditModalShow(linkObj) {
+function recipeEditModalShow(lnkId, unitVal) {
 
     console.log("▼▼▼ function recipeEditModalShow");
 
-    // リンクのid(lnk_Recipe_XX)を取得
-    var lnkId = linkObj.id;
+//    // リンクのid(lnk_Recipe_XX)を取得
+//    var lnkId = linkObj.id;
 
     // リンクのidの最後の"_"以降から対象レシピId(XX)を取得
     var recipeId =
@@ -234,7 +213,7 @@ function recipeEditModalShow(linkObj) {
     var recipeData = getRecipeDataFromArrayById(recipeArray, recipeId);
 
     // レシピ編集モーダルの表示引数に設定
-    var param = {recipe_data: recipeData};
+    var param = {recipe_data: recipeData, unit_val: unitVal};
 
     $.ajax({
         url: 'rest/recipeEdit/init.json',
@@ -244,8 +223,32 @@ function recipeEditModalShow(linkObj) {
         $('#recipeEdit-modal').find('#modal-label').html(result['title']);
         $('#recipeEdit-modal').find('#modal-body').html(result['content']);
         $('#recipeEdit-modal').modal('show');
+        
+        // commonname_per_medinaのIdを選択状態に反映
+        rows_selected = result['useMedinaIdarray'];
+        
         // DataTables適用
-        $('#recipeEdit-modal').find("#recipeEditTable").DataTable({
+        var table = $('#recipeEdit-modal').find("#recipeEditTable").DataTable({
+            'columnDefs': [{
+                'targets': 0,
+                'searchable': false,
+                'orderable': false,
+                'width': '1%',
+                'className': 'dt-body-center',
+                'render': function (data, type, full, meta) {
+                    return '<input type="checkbox">';
+                }
+            }],
+            'rowCallback': function (row, data, dataIndex) {
+                // Get row ID
+                var rowId = data[0];
+
+                // If row ID is in the list of selected row IDs
+                if ($.inArray(rowId, rows_selected) !== -1) {
+                    $(row).find('input[type="checkbox"]').prop('checked', true);
+                    $(row).addClass('selected');
+                }
+            },
             // 件数切替機能 無効
             lengthChange: false,
             // 検索機能 無効
@@ -262,6 +265,59 @@ function recipeEditModalShow(linkObj) {
             scrollY: "300px",
             scrollCollapse: true,
         }).columns.adjust().draw();
+
+        // Handle click on checkbox
+        $('#recipeEditTable tbody').on('click', 'input[type="checkbox"]', function (e) {
+            var $row = $(this).closest('tr');
+
+            // Get row data
+            var data = table.row($row).data();
+
+            // Get row ID
+            var rowId = data[0];
+
+            // Determine whether row ID is in the list of selected row IDs 
+            var index = $.inArray(rowId, rows_selected);
+
+            // If checkbox is checked and row ID is not in list of selected row IDs
+            if (this.checked && index === -1) {
+                rows_selected.push(rowId);
+
+                // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
+            } else if (!this.checked && index !== -1) {
+                rows_selected.splice(index, 1);
+            }
+
+            if (this.checked) {
+                $row.addClass('selected');
+            } else {
+                $row.removeClass('selected');
+            }
+
+            // Update state of "Select all" control
+            updateDataTableSelectAllCtrl(table);
+
+            // Prevent click event from propagating to parent
+            e.stopPropagation();
+        });
+
+        // Handle click on "Select all" control
+        $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
+            if (this.checked) {
+                $('#recipeEditTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
+            } else {
+                $('#recipeEditTable tbody input[type="checkbox"]:checked').trigger('click');
+            }
+
+            // Prevent click event from propagating to parent
+            e.stopPropagation();
+        });
+
+        // Handle table draw event
+        table.on('draw', function () {
+            // Update state of "Select all" control
+            updateDataTableSelectAllCtrl(table);
+        });
 
     }).fail(function (jqXHR, textStatus, errorThrown) {
         console.log("×fail(status)：" + textStatus);

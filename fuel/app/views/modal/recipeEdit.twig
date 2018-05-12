@@ -6,11 +6,11 @@
             <div class="row">
                 <div class="th">現在の容量</div> 
                 <div class="th">設定後の容量</div>
-                <div class="th">初期値</div>
+                <div class="th">容量の初期値</div>
             </div>
             <div class="row">
                 <div class="td">{{base_dosage_label}}</div> 
-                <div class="td_input"><input type="text" id="txtInputDosage" class="form-control text-right" size="5" value="{{data_recipe.dosage_str}}"/></div>
+                <div class="td td_input"><input type="text" id="txtInputDosage" class="form-control text-right" size="5" value="{{data_recipe.dosage_str}}"/></div>
                 <div class="td">{{default_dosage_label}}</div>
             </div>
         </div>
@@ -19,10 +19,10 @@
 <div class="row">
     <div class="col-md-12">
         <h5 style="text-align: left;text-decoration: underline">使用薬剤変更</h5>
-        <table id="recipeEditTable" class="table table-bordered table-striped table-responsive table-condensed table-hover recipe_edit">
+        <table id="recipeEditTable" class="table table-bordered table-striped table-responsive table-condensed table-hover">
             <thead>
                 <tr>
-                    <th class="col1">使用</th>
+                    <th class="col1">使用　<input name="select_all" value="1" type="checkbox"></th>
                     <th class="col2">薬剤名</th>
                     <th class="col3">メーカー</th>
                     <th class="col4">価格</th>
@@ -31,7 +31,7 @@
             <tbody>
                 {% for medinaData in medinas %}
                     <tr>
-                        <td class="col1"></td>
+                        <td class="col1">{{medinaData.id}}</td>
                         <td class="col2">{{medinaData.name}}</td>
                         <td class="col3">{{medinaData.company}}</td>
                         <td class="col4">{{medinaData.price}}</td>

@@ -1,4 +1,40 @@
-/* global viewModel, LS_KEY_RECIPE_DATA */
+/* global viewModel, LS_KEY_RECIPE_DATA, rows_selected */
+
+/*
+ * 使用薬剤選択テーブルの全選択/全解除
+ * @param {type} table
+ * @returns {undefined}
+ */
+function updateDataTableSelectAllCtrl(table) {
+    var $table = table.table().node();
+    var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+    var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+    var chkbox_select_all = $('thead input[name="select_all"]', $table).get(0);
+
+    // If none of the checkboxes are checked
+    if ($chkbox_checked.length === 0) {
+        chkbox_select_all.checked = false;
+        if ('indeterminate' in chkbox_select_all) {
+            chkbox_select_all.indeterminate = false;
+        }
+
+        // If all of the checkboxes are checked
+    } else if ($chkbox_checked.length === $chkbox_all.length) {
+        chkbox_select_all.checked = true;
+        if ('indeterminate' in chkbox_select_all) {
+            chkbox_select_all.indeterminate = false;
+        }
+
+        // If some of the checkboxes are checked
+    } else {
+        chkbox_select_all.checked = true;
+        if ('indeterminate' in chkbox_select_all) {
+            chkbox_select_all.indeterminate = true;
+        }
+    }
+}
+
+
 
 /**
  * レシピ変更ボタンクリックイベント
@@ -9,6 +45,9 @@ $(document).on('click', '#btnRecipeChange', function () {
     return false;
 });
 
+/**
+ * DatTables適用テーブルの列幅再調整をモーダル表示イベントで実施
+ */
 $(document).on('shown.bs.modal', '#recipeEdit-modal', function () {
     var table = $('#recipeEdit-modal').find("#recipeEditTable").DataTable();
     table.columns.adjust().draw();
@@ -35,6 +74,24 @@ function execRecipeChange() {
 
     // レシピ情報の容量の値を更新
     recipeData['dosage_str'] = inputDosageVal;
+
+    // テーブルのチェック行からcommonname_per_medinasのデータを再作成する
+    var dt = $('#recipeEditTable').DataTable();
+    dt.rows().every(function () {
+        var d = this.data();
+
+        // 使用薬剤テーブルのチェック状態を取得
+        $.each(rows_selected, function (index, medinaId) {
+            if (d[0] == medinaId){
+                // 選択行
+                console.log('選択薬剤：' + d);
+                // TODO:commonname_per_medinaを再現するにはIdも必要なので隠し列に持たせる？
+            }
+        });
+    });
+    
+    
+    
 
     // レシピ情報の変更をローカルストレージに反映
     updateLsRecipeDataArray(recipeIdVal, recipeData);

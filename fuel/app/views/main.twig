@@ -4,20 +4,20 @@
             メニューで表示・非表示を切り替える
 #}
 <!DOCTYPE html>
-<head>
+
     <meta charset="utf-8">
     <title>{{title}}</title>
     {{asset_css('bootstrap.css') }}
+    {{asset_css('DataTables/datatables.min.css') }} 
     {{asset_css('custom/custom_navbar.css') }}
     {{asset_css('custom/bootstrap-print.css') }}
     {{asset_css('custom/recipeEdit.css') }} 
     {{asset_css('custom/chemocalc.css') }}
     {{asset_css('custom/regimen.css') }}
     {{asset_css('custom/diff.css') }}
-    {{asset_css('DataTables/datatables.min.css') }} 
     {{asset_js('jquery/jquery-3.3.1.min.js') }}
-    {{asset_js('knockout/knockout-3.4.2.js') }}    
     {{asset_js('bootstrap.js') }}
+    {{asset_js('knockout/knockout-3.4.2.js') }}
     {{asset_js('DataTables/datatables.min.js') }} 
     {{asset_js('custom/viewmodel.js') }} 
     {{asset_js('custom/chemocalc.js') }}  
@@ -27,7 +27,7 @@
      
     <link rel="shortcut icon" href="{{base_url(false) }}/assets/img/favicon.ico" type="image/x-icon">
     <link rel="icon" href="{{base_url(false) }}/assets/img/favicon.ico" type="image/x-icon">{#TODO:レシピIDはここから埋め込みたい#}
-</head>
+
 <body>
     <input type="hidden" id='nowRegimen' />
     <input type="hidden" id='hdnRecipeIdJson' value="{{recipe_id_json}}" />
