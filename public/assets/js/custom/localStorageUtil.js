@@ -43,26 +43,20 @@ function updateLsRecipeDataArray(recipeIdVal, recipeDataVal) {
 
     // ローカルストレージに保存済のレシピ情報配列を取得
     var recipeArray = JSON.parse(localStorage.getItem(LS_KEY_RECIPE_DATA));
-    if (!recipeArray) {
-        // レシピ容量配列が存在しないので新規作成して追加
-        recipeArray = new Array();
-        recipeArray.push(recipeDataVal);
-    } else {
-        isUpdate = false; // 同一Idレシピの登録があるか？
-        jQuery.each(recipeArray, function (index, value) {
-            if (value['id'] === recipeIdVal) {
-                // 同一Idレシピのデータを更新
-                recipeArray[index] = recipeDataVal;
-                isUpdate = true;
-                return false;
-            }
-        });
+    var isUpdate = false;
+    jQuery.each(recipeArray, function (index, value) {
 
-        if (!isUpdate) {
-            // 同一Idレシピの登録が無い場合追加
-            recipeArray.push(recipeDataVal);
+        if (value['commonname_per_recipe']['commonname_id'] === recipeDataVal['commonname_per_recipe']['commonname_id']){
+            // 処理中のレシピと一般名が同じ薬剤を使用するレシピのcommonname_per_medinasも同時に差し替え
+            recipeArray[index]['commonname_per_recipe']['commonname']['commonname_per_medinas'] = commonNamePerMedinas;      
         }
-    }
+
+        if (!isUpdate && value['id'] === recipeIdVal) {
+            // 処理中のレシピのデータを更新
+            recipeArray[index] = recipeDataVal;
+            isUpdate = true;
+        }
+    });
 
     // json形式でローカルストレージに保存(毎回上書き)
     localStorage.setItem(LS_KEY_RECIPE_DATA, JSON.stringify(recipeArray));
