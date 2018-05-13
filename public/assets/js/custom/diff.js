@@ -68,6 +68,7 @@ $(document).on('click', '#btnPrintDiff', function () {
 });
 
 $(document).on('shown.bs.modal', '#diff-modal', function () {
+    $('#diff-modal').find("#diffTable").DataTable().columns.adjust().draw();
 })
 $(document).on('hidden.bs.modal', '#diff-modal', function () {
 })
