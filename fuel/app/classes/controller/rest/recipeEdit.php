@@ -33,7 +33,16 @@ class Controller_Rest_RecipeEdit extends Controller_Rest
         $commonname_id = $ls_recipe_data['commonname_per_recipe']['commonname_id'];
         // 使用薬剤リストをDBから取得
         $medina_data = Model_Commonname::find($commonname_id, array('related' => array('medinas')));
-        $data['medinas'] = $medina_data['medinas'];
+		$midinas = $medina_data['medinas'];
+		
+        foreach ($midinas as $key => $value)
+        {
+            // 薬剤Modelの補助カラムを含めた形で再設定
+            $midinas[$key] = $value->to_array();
+        }
+		
+		// 使用薬剤テーブル表示用
+		$data['medinas'] = $midinas;
 
         // 使用中の薬剤Id配列
         // これを利用して薬剤一覧にチェックを入れる
@@ -48,7 +57,7 @@ class Controller_Rest_RecipeEdit extends Controller_Rest
         return $this->response(array(
                     'title' => $recipe_title,
                     'useMedinaIdarray' => $use_medina_data_array,
-					'medinasArray' => $medina_data['medinas'], // 使用薬剤変更用にセッションストレージに格納する
+					'medinasArray' => $midinas, // セッションストレージ格納用
                     'content' => View_Twig::forge('modal/recipeEdit', $data)->render()
         ));
     }

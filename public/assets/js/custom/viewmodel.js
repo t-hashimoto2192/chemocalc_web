@@ -54,19 +54,13 @@ function settingViewModel() {
     }, this);
 
     self.docTotalPrice30per = ko.computed(function () {
-        var unformatedVal = unformatPriceValue(this.docTotalPrice());
-        var ret = CalcBurdenPrice(unformatedVal, 0.3);
-        return ret > 0 ? formatPriceValue(ret) : '';
+        return CalcBurdenPrice(this.docTotalPrice(), 0.3);
     }, this);
     self.docTotalPrice20per = ko.computed(function () {
-        var unformatedVal = unformatPriceValue(this.docTotalPrice());
-        var ret = CalcBurdenPrice(unformatedVal, 0.2);
-        return ret > 0 ? formatPriceValue(ret) : '';
+        return CalcBurdenPrice(this.docTotalPrice(), 0.2);
     }, this);
     self.docTotalPrice10per = ko.computed(function () {
-        var unformatedVal = unformatPriceValue(this.docTotalPrice());
-        var ret = CalcBurdenPrice(unformatedVal, 0.1);
-        return ret > 0 ? formatPriceValue(ret) : '';
+        return CalcBurdenPrice(this.docTotalPrice(), 0.1);
     }, this);
 }
 ;

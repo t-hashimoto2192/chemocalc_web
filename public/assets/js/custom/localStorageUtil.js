@@ -16,9 +16,8 @@ function initializeLsRecipeDataArray() {
         // 取得結果をローカルストレージに設定
         console.log("★ ②localStorageに設定");
         localStorage.setItem(LS_KEY_RECIPE_DATA, JSON.stringify(result));
-        
-        hoge();
-        
+        // 各画面の初期化
+        initializeContentDiv();
     }).fail(function (jqXHR, textStatus, errorThrown) {
         $("#XMLHttpRequest").html("XMLHttpRequest : " + jqXHR.status);
         $("#textStatus").html("textStatus : " + textStatus);
@@ -38,6 +37,9 @@ function initializeLsRecipeDataArray() {
 function updateLsRecipeDataArray(recipeIdVal, recipeDataVal) {
 
     console.log("▼▼▼ function updateLsRecipeDataArray");
+    
+    // TODO:使用薬剤変更結果は同一一般名薬剤を使用する別レシピ配下にも適用が必要
+    var commonNamePerMedinas = recipeDataVal['commonname_per_recipe']['commonname']['commonname_per_medinas'];
 
     // ローカルストレージに保存済のレシピ情報配列を取得
     var recipeArray = JSON.parse(localStorage.getItem(LS_KEY_RECIPE_DATA));

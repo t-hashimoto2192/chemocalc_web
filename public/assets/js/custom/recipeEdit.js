@@ -103,16 +103,21 @@ function execRecipeChange() {
     // レシピ情報の変更をローカルストレージに反映
     updateLsRecipeDataArray(recipeIdVal, recipeData);
     
-    // TODO:同一薬剤を使用する療法が複数あるケースもあり
-    switch (recipeIdVal) {
-        case "25":
-            reloadDoc(recipeData);
-            break;
+    // TODO:ここでは処理中レシピの使用薬剤のみを変更したが、実際は同一薬剤を使用する別レシピも合わせて更新する必要あり
+    // updateLsRecipeDataArrayでやる？
+    
+//    switch (recipeIdVal) {
+//        case "25":
+//            reloadDoc(recipeData);
+//            break;
+//
+//        default:
+//
+//            break;
+//    }
 
-        default:
-
-            break;
-    }
+    // 各画面の初期化
+    initializeContentDiv();
 
     // ダイアログ閉じる
     $('body').removeClass('modal-open');

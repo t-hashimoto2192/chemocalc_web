@@ -194,7 +194,7 @@ $(document).on('click', '#btnPrintBase', function () {
 
 /**
  * レシピ編集モーダル表示
- * @param {type} linkObj リンクボタン
+ * @param {type} lnkId リンクボタンId
  * @param {type} unitVal 薬剤の単位文字列 
  * @returns {undefined}
  */
@@ -229,26 +229,29 @@ function recipeEditModalShow(lnkId, unitVal) {
         $('#recipeEdit-modal').find('#modal-label').html(result['title']);
         $('#recipeEdit-modal').find('#modal-body').html(result['content']);
         $('#recipeEdit-modal').modal('show');
-        
+
         // commonname_per_medinaのIdを選択状態に反映
         rows_selected = result['useMedinaIdarray'];
-        
+
         // commonname_per_medinaの再作成に使用のためセッションストレージにmednasを格納
         sessionStorage.removeItem(SS_KEY_MEDINAS_DATA);
         sessionStorage.setItem(SS_KEY_MEDINAS_DATA, JSON.stringify(result['medinasArray']));
-        
+
         // DataTables適用
         var table = $('#recipeEdit-modal').find("#recipeEditTable").DataTable({
-            'columnDefs': [{
-                'targets': 0,
-                'searchable': false,
-                'orderable': false,
-                'width': '1%',
-                'className': 'dt-body-center',
-                'render': function (data, type, full, meta) {
-                    return '<input type="checkbox">';
-                }
-            }],
+            'columnDefs': [
+                {
+                    'targets': 0,
+                    'searchable': false,
+                    'orderable': false,
+                    'width': '1%',
+                    'className': 'dt-body-center',
+                    'render': function (data, type, full, meta) {
+                        return '<input type="checkbox">';
+                    },
+                },
+                {type: 'currency', 'targets': 3}
+            ],
             'rowCallback': function (row, data, dataIndex) {
                 // Get row ID
                 var rowId = data[0];
@@ -385,17 +388,46 @@ function calcDosageVal(bsaVal, dosageVal) {
 
 /**
  * 薬価自己負担額計算
- * @param {type} totalPriceVal 合計薬価
+ * @param {type} formatedTotalPriceVal 合計薬価(カンマ区切り)
  * @param {type} burdenPerVal 負担割合(0.X)
- * @returns {Number|String} 負担割合に応じた負担額　
+ * @returns {String|Number} 負担割合に応じた負担額(カンマ区切り)
  */
-function CalcBurdenPrice(totalPriceVal, burdenPerVal) {
+function CalcBurdenPrice(formatedTotalPriceVal, burdenPerVal) {
     var ret = '';
-    if (!totalPriceVal || isNaN(totalPriceVal)) {
+    var unformatedVal = unformatPriceValue(formatedTotalPriceVal);
+    if (!unformatedVal || isNaN(unformatedVal)) {
         return ret;
     }
-    ret = Math.round(totalPriceVal * burdenPerVal);
-    return ret;
+    ret = Math.round(unformatedVal * burdenPerVal);
+    return ret > 0 ? formatPriceValue(ret) : '';
 }
 
+/**
+ * DataTablesのカンマ区切り列ソート対応プラグイン
+ * https://cdn.datatables.net/plug-ins/1.10.16/sorting/currency.js
+ * @type type
+ */
+jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+    "currency-pre": function (a) {
+        a = (a === "-") ? 0 : a.replace(/[^\d\-\.]/g, "");
+        return parseFloat(a);
+    },
 
+    "currency-asc": function (a, b) {
+        return a - b;
+    },
+
+    "currency-desc": function (a, b) {
+        return b - a;
+    }
+});
+
+/**
+ * Debug用ローカルストレージ初期化＆再リロードボタンクリックイベント
+ */
+$(document).on('click', '#btnDebugReload', function () {
+    localStorage.clear();
+    sessionStorage.clear();
+    location.reload(true);
+    return false;
+});
