@@ -17,20 +17,20 @@
     </div>
 </row>
 <row>
-    <table id="diffTable" class="table table-bordered table-striped table-responsive table-condensed table-hover">
+    <table id="diffTable_wrapper" class="table table-bordered table-striped table-responsive table-condensed table-hover">
         <thead>
             <tr>
-                <th>レジメン</th>
-                <th>1回分</th>
-                <th>1コース分</th>
+                <th class="col1">レジメン</th>
+                <th class="col2">1回分</th>
+                <th class="col3">1コース分</th>
             </tr>
         </thead>
         <tbody>
             {% for priceData in priceDataArray %}
                 <tr>
-                    <td>{{priceData.regimenName}}</td>
-                    <td>{{priceData.oncePrice}}</td>
-                    <td>{{priceData.oneCoursePrice}}</td>
+                    <td class="col1">{{priceData.regimenName}}</td>
+                    <td class="col2">{{priceData.oncePrice}}</td>
+                    <td class="col3">{{priceData.oneCoursePrice}}</td>
                 </tr>
             {% endfor %}
         </tbody>

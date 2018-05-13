@@ -46,10 +46,13 @@ $(document).on('click', 'button[id^="btnDiscont_"]', function () {
                 // ページング機能 無効
                 paging: false,
                 // 初期表示時には並び替えをしない
-                order: []
-            });
+                order: [],
+                // スクロール設定
+                scrollY: "330px",
+                scrollCollapse: true,
+            }).columns.adjust().draw();
             // テーブル行のスタイル設定
-            $('#diff-modal').find('#diffTable').addClass(rowClass);
+            $('#diff-modal').find('#diffTable_wrapper').addClass(rowClass);
         },
         error: function (result) {
             alert('error:' + result.status + '(' + result.statusText + ')');

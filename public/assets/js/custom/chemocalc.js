@@ -42,6 +42,25 @@ window.onload = function () {
         // 各画面の初期化
         initializeContentDiv();
     }
+    
+        // 薬剤の規格テーブルにDataTables適用
+        $('.tblStandardList').DataTable({
+            // 件数切替機能 無効
+            lengthChange: false,
+            // 検索機能 無効
+            searching: false,
+            // ソート機能 無効
+            ordering: false,
+            // 情報表示 無効
+            info: false,
+            // ページング機能 無効
+            paging: false,
+            // 初期表示時には並び替えをしない
+            order: [],
+            // スクロール設定
+            scrollY: "100px",
+            scrollCollapse: true,
+        }).columns.adjust().draw();
 
     // knockout.js ViewModelバインド
     ko.applyBindings(viewModel);
@@ -174,10 +193,13 @@ $(document).on('click', '#btnDiff', function () {
                 // ページング機能 無効
                 paging: false,
                 // 初期表示時には並び替えをしない
-                order: []
-            });
+                order: [],
+                // スクロール設定
+                scrollY: "330px",
+                scrollCollapse: true,
+             }).columns.adjust().draw();
             // テーブル行のスタイル設定
-            $('#diff-modal').find('#diffTable').addClass("burden30Per");
+            $('#diff-modal').find('#diffTable_wrapper').addClass("burden30Per");
         },
         error: function (result) {
             alert('error:' + result.status + '(' + result.statusText + ')');

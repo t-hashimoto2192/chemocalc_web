@@ -97,12 +97,21 @@
         <span style="font-weight: bold;font-size: medium;">DOC：</span>
     </div> 
     <div class="row">
-        <table class="table table-bordered table-condensed table-hover table-striped tblStandardList" id="tblStandardDoc">
-            <tbody data-bind="foreach: docStandardArray">
-                <tr data-bind="css: { dataExist:  id > 0 }">
-                    <td data-bind="text: quantity_text"></td>
-                </tr>
-            </tbody>
-        </table>
+        <div style="width: 280px;">
+            <table class="table table-bordered table-condensed table-hover table-striped tblStandardList" id="tblStandardDoc">
+                <thead>
+                    <tr>
+                        <th>
+                            <!-- DataTablesのエラー回避のため定義するがcssで非表示にする -->
+                        </th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: docStandardArray">
+                    <tr data-bind="css: { dataExist:  id > 0 }">
+                        <td class="col1" data-bind="text: quantity_text"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div> 
     </div> 
 {% endblock regimenMedina %}

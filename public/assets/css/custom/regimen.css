@@ -64,9 +64,12 @@ table.price > tbody > tr > td.col3 {
 }
 
 /*薬剤の規格テーブル設定*/
-table.tblStandardList {
-    width: 280px;
+.tblStandardList {
     font-size: x-small;
+}
+
+.tblStandardList th.sorting_disabled{
+    display:none !important;
 }
 
 /* 薬剤の規格表示テーブル */
