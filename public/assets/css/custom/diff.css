@@ -47,16 +47,16 @@
 
 #diffTable > thead > tr > th.col1,
 #diffTable > tbody > tr > td.col1 {
-    text-align: left;
-    width: 30%;
+    text-align: left !important;
+    width: 25% !important;
 }
 #diffTable > thead > tr > th.col2,
 #diffTable > tbody > tr > td.col2 {
-    text-align: left;
-    width: 40%;
+    text-align: left !important;
+    width: 55% !important;
 }
 #diffTable > thead > tr > th.col3,
 #diffTable > tbody > tr > td.col3 {
-    text-align: left;
-    width: 30%;
+    text-align: left !important;
+    width: 20% !important;
 }

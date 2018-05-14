@@ -180,26 +180,9 @@ $(document).on('click', '#btnDiff', function () {
             $('#diff-modal').find('#modal-label').html(result['title']);
             $('#diff-modal').find('#modal-body').html(result['content']);
             $('#diff-modal').modal('show');
-            // DataTables適用
-            $('#diff-modal').find("#diffTable").DataTable({
-                // 件数切替機能 無効
-                lengthChange: false,
-                // 検索機能 無効
-                searching: false,
-                // ソート機能 有効
-                ordering: true,
-                // 情報表示 無効
-                info: false,
-                // ページング機能 無効
-                paging: false,
-                // 初期表示時には並び替えをしない
-                order: [],
-                // スクロール設定
-                scrollY: "330px",
-                scrollCollapse: true,
-             }).columns.adjust().draw();
-            // テーブル行のスタイル設定
-            $('#diff-modal').find('#diffTable_wrapper').addClass("burden30Per");
+            
+            // DataTable適用
+            settingDataTableForDiff("burden30Per");
         },
         error: function (result) {
             alert('error:' + result.status + '(' + result.statusText + ')');

@@ -33,26 +33,8 @@ $(document).on('click', 'button[id^="btnDiscont_"]', function () {
         success: function (result) {
             // 既に開いているbody部のみ書き換え
             $('#diff-modal').find('#modal-body').html(result['content']);
-            // DataTables適用
-            $('#diff-modal').find("#diffTable").DataTable({
-                // 件数切替機能 無効
-                lengthChange: false,
-                // 検索機能 無効
-                searching: false,
-                // ソート機能 有効
-                ordering: true,
-                // 情報表示 無効
-                info: false,
-                // ページング機能 無効
-                paging: false,
-                // 初期表示時には並び替えをしない
-                order: [],
-                // スクロール設定
-                scrollY: "330px",
-                scrollCollapse: true,
-            }).columns.adjust().draw();
-            // テーブル行のスタイル設定
-            $('#diff-modal').find('#diffTable_wrapper').addClass(rowClass);
+            // DataTable適用
+            settingDataTableForDiff(rowClass);
         },
         error: function (result) {
             alert('error:' + result.status + '(' + result.statusText + ')');
@@ -72,3 +54,37 @@ $(document).on('shown.bs.modal', '#diff-modal', function () {
 })
 $(document).on('hidden.bs.modal', '#diff-modal', function () {
 })
+
+/**
+ * テーブルにjquery.DataTableを適用
+ * @param {type} rowClassVal 自己負担割合別クラス
+ * @returns {undefined}
+ */
+function settingDataTableForDiff(rowClassVal){
+    // DataTables適用
+    $('#diff-modal').find("#diffTable").DataTable({
+        // 件数切替機能 無効
+        lengthChange: false,
+        // 検索機能 無効
+        searching: false,
+        // ソート機能 有効
+        ordering: true,
+        // 情報表示 無効
+        info: false,
+        // ページング機能 無効
+        paging: false,
+        // 初期表示時には並び替えをしない
+        order: [],
+        // スクロール設定
+        scrollY: "330px",
+        scrollCollapse: true,
+        columnDefs: [
+            { targets: '_all', "className": "text-left" },
+            { targets: 0, width: '25%' },
+            { targets: 1, width: '55%' },
+            { targets: 2, width: '20%' },
+        ]
+     }).columns.adjust().draw();
+    // テーブル行のスタイル設定
+    $('#diff-modal').find('#diffTable_wrapper').addClass(rowClassVal);
+}

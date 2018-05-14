@@ -52,7 +52,8 @@
 #recipeEditTable > tbody > tr > td.col3 {
     width: 25%;
 }
-#recipeEditTable > thead > tr > th.col4 {
+#recipeEditTable > thead > tr > th.col4,
+#recipeEditTable > tbody > tr > td.col4{
     width: 15%;
 }
 #recipeEditTable > tbody > tr > td.col1 {

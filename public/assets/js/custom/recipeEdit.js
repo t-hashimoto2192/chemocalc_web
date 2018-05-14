@@ -79,7 +79,7 @@ function execRecipeChange() {
     
      // -- 使用薬剤の変更の反映 --
      
-     // ローカルストレージに保存済のレシピ情報配列を取得
+     // セッションストレージに保存済のレシピ情報配列を取得
     var medinasArray = JSON.parse(sessionStorage.getItem(SS_KEY_MEDINAS_DATA));
     
     // テーブルのチェック行からcommonname_per_medinasのデータを再作成する
