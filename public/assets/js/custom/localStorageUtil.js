@@ -38,7 +38,7 @@ function updateLsRecipeDataArray(recipeIdVal, recipeDataVal) {
 
     console.log("▼▼▼ function updateLsRecipeDataArray");
     
-    // TODO:使用薬剤変更結果は同一一般名薬剤を使用する別レシピ配下にも適用が必要
+    // 使用薬剤変更結果は同一一般名薬剤を使用する別レシピ配下にも適用する
     var commonNamePerMedinas = recipeDataVal['commonname_per_recipe']['commonname']['commonname_per_medinas'];
 
     // ローカルストレージに保存済のレシピ情報配列を取得
@@ -52,7 +52,7 @@ function updateLsRecipeDataArray(recipeIdVal, recipeDataVal) {
         }
 
         if (!isUpdate && value['id'] === recipeIdVal) {
-            // 処理中のレシピのデータを更新
+            // 処理中のレシピのデータ(容量変更結果)を更新
             recipeArray[index] = recipeDataVal;
             isUpdate = true;
         }
@@ -98,6 +98,28 @@ function getMedinaDataFromArrayById(arrayVal, medinaIdVal) {
     } else {
         jQuery.each(arrayVal, function (index, value) {
             if (value['id'] === medinaIdVal) {
+                ret = arrayVal[index];
+                return false;
+            }
+        });
+        return ret;
+    }
+}
+
+/**
+ * レシピデータ配列からid指定でレシピデータを取得
+ * @param {type} recipeIdVal レシピId
+ * @returns {getRecipeDataFromLsById.arrayVal|Boolean} レシピデータ(無ければfalse)
+ */
+function getRecipeDataFromLsById(recipeIdVal) {
+    var ret;
+    // ローカルストレージに保存済のレシピ情報配列を取得
+    var arrayVal = JSON.parse(localStorage.getItem(LS_KEY_RECIPE_DATA));
+    if (!arrayVal) {
+        return false;
+    } else {
+        jQuery.each(arrayVal, function (index, value) {
+            if (value['id'] === recipeIdVal) {
                 ret = arrayVal[index];
                 return false;
             }

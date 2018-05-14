@@ -43,24 +43,24 @@ window.onload = function () {
         initializeContentDiv();
     }
     
-        // 薬剤の規格テーブルにDataTables適用
-        $('.tblStandardList').DataTable({
-            // 件数切替機能 無効
-            lengthChange: false,
-            // 検索機能 無効
-            searching: false,
-            // ソート機能 無効
-            ordering: false,
-            // 情報表示 無効
-            info: false,
-            // ページング機能 無効
-            paging: false,
-            // 初期表示時には並び替えをしない
-            order: [],
-            // スクロール設定
-            scrollY: "100px",
-            scrollCollapse: true,
-        }).columns.adjust().draw();
+    // 薬剤の規格テーブルにDataTables適用
+    $('.tblStandardList').DataTable({
+        // 件数切替機能 無効
+        lengthChange: false,
+        // 検索機能 無効
+        searching: false,
+        // ソート機能 無効
+        ordering: false,
+        // 情報表示 無効
+        info: false,
+        // ページング機能 無効
+        paging: false,
+        // 初期表示時には並び替えをしない
+        order: [],
+        // スクロール設定
+        scrollY: "100px",
+        scrollCollapse: true
+    }).columns.adjust().draw();
 
     // knockout.js ViewModelバインド
     ko.applyBindings(viewModel);
@@ -73,14 +73,13 @@ window.onload = function () {
  * @returns {undefined}
  */
 function initializeContentDiv() {
-    // ローカルストレージに保存済のレシピ情報配列を取得
-    var recipeArray = JSON.parse(localStorage.getItem(LS_KEY_RECIPE_DATA));
-    console.log("★ ③localStorageより取得");
 
     // 各治療費計算シート画面のデータ参照個所を設定
 
     // -- DOC療法
-    reloadDoc(getRecipeDataFromArrayById(recipeArray, '25'));
+    reloadDoc(getRecipeDataFromLsById('25'));
+    
+    // TODO:★療法別画面数分追記★
 }
 
 /**
@@ -218,10 +217,8 @@ function recipeEditModalShow(lnkId, unitVal) {
 
     console.log("★recipeId：" + recipeId);
 
-    // ローカルストレージに保存済のレシピ情報配列を取得
-    var recipeArray = JSON.parse(localStorage.getItem(LS_KEY_RECIPE_DATA));
-    // レシピIdに一致するレシピ情報を取得
-    var recipeData = getRecipeDataFromArrayById(recipeArray, recipeId);
+    // レシピIdに一致するレシピ情報をローカルストレージから取得
+    var recipeData = getRecipeDataFromLsById(recipeId);
 
     // レシピ編集モーダルの表示引数に設定
     var param = {recipe_data: recipeData, unit_val: unitVal};
@@ -406,6 +403,8 @@ function CalcBurdenPrice(formatedTotalPriceVal, burdenPerVal) {
     ret = Math.round(unformatedVal * burdenPerVal);
     return ret > 0 ? formatPriceValue(ret) : '';
 }
+
+
 
 /**
  * DataTablesのカンマ区切り列ソート対応プラグイン

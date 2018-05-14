@@ -34,8 +34,6 @@ function updateDataTableSelectAllCtrl(table) {
     }
 }
 
-
-
 /**
  * レシピ変更ボタンクリックイベント
  */
@@ -69,10 +67,8 @@ function execRecipeChange() {
 
     // -- 薬剤容量の変更の反映 --
 
-    // ローカルストレージに保存済のレシピ情報配列を取得
-    var recipeArray = JSON.parse(localStorage.getItem(LS_KEY_RECIPE_DATA));
-    // レシピIdに一致するレシピ情報を取得
-    var recipeData = getRecipeDataFromArrayById(recipeArray, recipeIdVal);
+    // レシピIdに一致するレシピ情報をローカルストレージから取得
+    var recipeData = getRecipeDataFromLsById(recipeIdVal);
 
     // レシピ情報の容量の値を更新
     recipeData['dosage_str'] = inputDosageVal;
@@ -102,19 +98,6 @@ function execRecipeChange() {
 
     // レシピ情報の変更をローカルストレージに反映
     updateLsRecipeDataArray(recipeIdVal, recipeData);
-    
-    // TODO:ここでは処理中レシピの使用薬剤のみを変更したが、実際は同一薬剤を使用する別レシピも合わせて更新する必要あり
-    // updateLsRecipeDataArrayでやる？
-    
-//    switch (recipeIdVal) {
-//        case "25":
-//            reloadDoc(recipeData);
-//            break;
-//
-//        default:
-//
-//            break;
-//    }
 
     // 各画面の初期化
     initializeContentDiv();
@@ -125,46 +108,3 @@ function execRecipeChange() {
     $('#recipeEdit-modal').modal('hide');
     console.log("▲▲▲ function execRecipeChange");
 }
-
-///**
-// * 容量をローカルストレージに保存
-// * @returns {undefined}
-// */
-//function updateRecipeDosageForLocalStorage(recipeIdVal, inputDosageVal) {
-//
-//    console.log("▼▼▼ function updateRecipeDosageForLocalStorage");
-//
-//    var datalist = {
-//        id: recipeIdVal,
-//        dosage_str: inputDosageVal
-//    };
-//
-//    // ローカルストレージに保存済のレシピ容量配列を取得
-//    var recipeDosageArray = JSON.parse(localStorage.getItem(LS_KEY_RECIPE_DATA));
-//    if (!recipeDosageArray) {
-//        // レシピ容量配列が存在しないので新規作成して追加
-//        recipeDosageArray = new Array();
-//        recipeDosageArray.push(datalist);
-//    } else {
-//        isUpdate = false; // 同一Idレシピの登録があるか？
-//        jQuery.each(recipeDosageArray, function (index, value) {
-//            if (value['recipeId'] === recipeIdVal) {
-//                // 同一Idレシピの容量を更新
-//                recipeDosageArray[index] = datalist;
-//                isUpdate = true;
-//                return false
-//            }
-//        });
-//
-//        if (!isUpdate) {
-//            // 同一Idレシピの登録が無かったため追加
-//            recipeDosageArray.push(datalist);
-//        }
-//    }
-//
-//    // json形式でローカルストレージに保存(毎回上書き)
-//    localStorage.setItem(LS_KEY_RECIPE_DATA, JSON.stringify(recipeDosageArray));
-//
-//    console.log("▲▲▲ function updateRecipeDosageForLocalStorage");
-//}
-

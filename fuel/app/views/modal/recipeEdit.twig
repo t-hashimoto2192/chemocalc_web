@@ -1,7 +1,7 @@
 <input type="hidden" id="hdnRecipeId" value="{{data_recipe.id}}" />
 <div class="row">
     <div class="col-md-12">
-        <h5 style="text-align: left;text-decoration: underline">容量</h5>
+        <h5 style="text-align: left;text-decoration: underline">容量変更</h5>
         <div id="dosage_edit_tbl">
             <div class="row">
                 <div class="th">現在の容量</div> 
@@ -34,7 +34,7 @@
                         <td class="col1">{{medinaData.id}}</td>
                         <td class="col2">{{medinaData.name}}</td>
                         <td class="col3">{{medinaData.company}}</td>
-                        <td class="col4">{{medinaData.price_formated_str}}</td>
+                        <td class="col4">{{medinaData.price_formated_str}}円</td>
                     </tr>
                 {% endfor %}
             </tbody>
